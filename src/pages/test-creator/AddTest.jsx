@@ -1,16 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import QuestionCard from '../../components/QuestionCard';
-import Title from '../../components/title';
+import Title from '../../components/Title';
 import useTheme from '../../hook/useTheme';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 function AddTest(props) {
     const navigate = useNavigate();
-    const [questions, setQuestions] = useState([
-        // { id: 0, question: "Một năm có bao nhiêu ngày?", options: ["365", "366", "364"] },
-        // { id: 1, question: "Thủ đô của Việt Nam là gì?", options: ["Hà Nội", "TP.HCM", "Đà Nẵng"] }
-    ]);
+    const [questions, setQuestions] = useState([]);
 
     const [title, setTitle] = useState("");
     

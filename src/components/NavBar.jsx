@@ -6,14 +6,14 @@ export default function NavBar() {
         <li>
           <a className="block rounded-lg px-3 py-2 text-gray-100 bg-white/10">
             Home
-          </a>
+          </a>      
         </li>
 
         <li className="relative group">
-          <a className="block rounded-lg px-3 py-2 text-gray-100">
+          <a className="block rounded-lg px-3 py-2 text-gray-100 ">
             Take a Tour ▾
           </a>
-          <div className="invisible group-hover:visible absolute left-0 mt-2 w-56 rounded-xl bg-white p-2 shadow-xl">
+          <div className="invisible group-hover:visible abs olute left-0 mt-2 w-56 rounded-xl bg-white p-2 shadow-xl">
             <a className="block rounded-lg px-3 py-2 text-sm hover:bg-gray-100">
               Create tests
             </a>
