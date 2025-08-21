@@ -1,2 +1,54 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+
+
+
+@theme {
+--font-OppenSans: OppenSans, sans-serif;
+
+
+--color-wild-sand-50: #f6f6f6;
+--color-wild-sand-100: #efefef;
+--color-wild-sand-200: #dcdcdc;
+--color-wild-sand-300: #bdbdbd;
+--color-wild-sand-400: #989898;
+--color-wild-sand-500: #7c7c7c;
+--color-wild-sand-600: #656565;
+--color-wild-sand-700: #525252;
+--color-wild-sand-800: #464646;
+--color-wild-sand-900: #3d3d3d;
+--color-wild-sand-950: #292929;
+
+--color-fuchsia-blue-50: #f5f4fe;
+--color-fuchsia-blue-100: #eeecfb;
+--color-fuchsia-blue-200: #dedbf9;
+--color-fuchsia-blue-300: #c6bef4;
+--color-fuchsia-blue-400: #a998ed;
+--color-fuchsia-blue-500: #8b6ee4;
+--color-fuchsia-blue-600: #7f56d9;
+--color-fuchsia-blue-700: #6a3dc4;
+--color-fuchsia-blue-800: #5933a4;
+--color-fuchsia-blue-900: #4a2b87;
+--color-fuchsia-blue-950: #2d1a5b;
+
+--color-blue-violet-50: #eef2ff;
+--color-blue-violet-100: #e0e7ff;
+--color-blue-violet-200: #c7d1fe;
+--color-blue-violet-300: #a4b3fd;
+--color-blue-violet-400: #8089f9;
+--color-blue-violet-500: #6263f2;
+--color-blue-violet-600: #584de7;
+--color-blue-violet-700: #4437cb;
+--color-blue-violet-800: #382fa4;
+--color-blue-violet-900: #322e81;
+--color-blue-violet-950: #1f1b4b;
+
+}
+
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium outline outline-gray-300;
+  }
+}
