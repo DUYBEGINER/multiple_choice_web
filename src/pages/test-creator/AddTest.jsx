@@ -4,7 +4,16 @@ import QuestionCard from "@/components/QuestionCard";
 import Title from "@/components/Title";
 
 import Header from "./Header";
-import { Input, Form, Select, Switch, Button, Upload ,message } from "antd";
+import {
+  Input,
+  Form,
+  Select,
+  Switch,
+  Button,
+  Upload,
+  message,
+  Space,
+} from "antd";
 import useTheme from "../../hook/useTheme";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -17,13 +26,9 @@ import {
   PlusOutlined,
   MinusOutlined,
   HolderOutlined,
-  DeleteOutlined
+  DeleteOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
-
-
-
-
-
 
 function AddTest(props) {
   const navigate = useNavigate();
@@ -32,10 +37,8 @@ function AddTest(props) {
 
   const [title, setTitle] = useState("");
 
-  
-  
   const uploadButton = (
-    <button style={{ border: 0, background: 'none' }} type="button">
+    <button style={{ border: 0, background: "none" }} type="button">
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>Upload</div>
     </button>
@@ -105,9 +108,7 @@ function AddTest(props) {
                                   d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"
                                 />
                               </svg>
-                              <span className="text-gray-700">
-                                True/False
-                              </span>
+                              <span className="text-gray-700">True/False</span>
                             </div>
                           ),
                           value: "True/False",
@@ -130,7 +131,13 @@ function AddTest(props) {
                 </div>
                 <Divider />
                 <div>
-                  <Form.Item className="font-bold" layout="vertical" label="Question 1" name="Question" rules={[{ required: true}]}>
+                  <Form.Item
+                    className="font-bold"
+                    layout="vertical"
+                    label="Question 1"
+                    name="Question"
+                    rules={[{ required: true }]}
+                  >
                     <Input.TextArea
                       placeholder="Type your question here..."
                       value={title}
@@ -138,7 +145,7 @@ function AddTest(props) {
                       rows={4}
                     />
                   </Form.Item>
-                 <Form.Item
+                  <Form.Item
                     label="Choices"
                     name="Choices"
                     required
@@ -161,28 +168,107 @@ function AddTest(props) {
                 </div>
 
                 <div className="flex flex-col">
-                    <Form.Item>
+                  <Form.Item noStyle>
+                    {[1, 2, 3, 4].map((question, index) => (
                       <div className="flex items-center gap-2 w-full mb-2">
                         <div className="w-7 h-7 rounded-full bg-blue-600 text-white font-semibold flex items-center justify-center">
-                          {String.fromCharCode(65 )}
+                          {String.fromCharCode(65 + index)}
                         </div>
                         <Input
                           placeholder="Your answer here"
                           className="flex-1 bg-gray-100"
                         />
-                        <Button
-                          type="text"
-                          icon={<HolderOutlined />}
-                        />
-                        <Button
-                          type="text"
-                          icon={<DeleteOutlined />}
-                          danger
-                        />
+                        <Button type="text" icon={<HolderOutlined />} />
+                        <Button type="text" icon={<DeleteOutlined />} danger />
                       </div>
-                      
-                    </Form.Item>
-                    
+                    ))}
+                    <div className="mt-3">
+                      <Button type="dashed" icon={<PlusOutlined />}>
+                        Add Answer
+                      </Button>
+                    </div>
+                  </Form.Item>
+                </div>
+                <Divider />
+
+                {/* Bottom Controls */}
+                <div className="flex gap-4">
+                  <Form.Item
+                    label={
+                      <span className="text-sm font-medium text-gray-700">
+                        Randomize Order
+                      </span>
+                    }
+                    className="w-[250px] mb-0"
+                    layout="vertical"
+                  >
+                    <Select
+                      defaultValue="current"
+                      options={[
+                        {
+                          value: "current",
+                          label: "Keep choices in current order",
+                        },
+                        { value: "random", label: "Shuffle choices" },
+                      ]}
+                      className="bg-gray-50"
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label={
+                      <span className="text-sm font-medium text-gray-700">
+                        Estimation time
+                      </span>
+                    }
+                    className="w-[180px] mb-0"
+                    layout="vertical"
+                  >
+                    <Input
+                      addonAfter={
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-gray-500">Mins</span>
+                          <svg
+                            className="w-4 h-4 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 6v6l4 2"
+                            />
+                            <circle cx="12" cy="12" r="10" />
+                          </svg>
+                        </div>
+                      }
+                      defaultValue="2"
+                      className="bg-gray-50"
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    label={
+                      <span className="text-sm font-medium text-gray-700">
+                        Mark as point
+                      </span>
+                    }
+                    className="w-[180px] mb-0"
+                    layout="vertical"
+                  >
+                    <Input
+                      addonAfter={
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-gray-500">Points</span>
+                          <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                        </div>
+                      }
+                      defaultValue="1"
+                      className="bg-gray-50"
+                    />
+                  </Form.Item>
                 </div>
               </Form>
             </div>
