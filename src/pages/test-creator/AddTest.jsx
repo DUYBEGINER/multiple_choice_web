@@ -4,7 +4,7 @@ import QuestionCard from "@/components/QuestionCard";
 import Title from "@/components/Title";
 
 import Header from "./Header";
-import { Input, Form, Select, Switch, Button, Upload } from "antd";
+import { Input, Form, Select, Switch, Button, Upload ,message } from "antd";
 import useTheme from "../../hook/useTheme";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -14,12 +14,32 @@ import {
   UserOutlined,
   SearchOutlined,
   EllipsisOutlined,
+  PlusOutlined,
+  MinusOutlined,
+  HolderOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
+
+
+
+
+
 
 function AddTest(props) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState();
 
   const [title, setTitle] = useState("");
+
+  
+  
+  const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type="button">
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
 
   return (
     <main className="h-screen flex flex-col w-full bg-gray-50 text-gray-900 ">
@@ -110,18 +130,59 @@ function AddTest(props) {
                 </div>
                 <Divider />
                 <div>
-                  <Form.Item className="font-bold" layout="vertical" label="Question 1" name="title" rules={[{ required: true, message: 'Please input!' }]}>
+                  <Form.Item className="font-bold" layout="vertical" label="Question 1" name="Question" rules={[{ required: true}]}>
                     <Input.TextArea
                       placeholder="Type your question here..."
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-full"
                       rows={4}
                     />
                   </Form.Item>
-                  <Form.Item>
-                    
+                 <Form.Item
+                    label="Choices"
+                    name="Choices"
+                    required
+                    className="mb-0"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Divider type="vertical" className="h-5 self-stretch" />
+                      <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-2">
+                          <span>Multiple answer</span>
+                          <Switch name="required" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span>Answer with image</span>
+                          <Switch name="image" />
+                        </div>
+                      </div>
+                    </div>
                   </Form.Item>
+                </div>
+
+                <div className="flex flex-col">
+                    <Form.Item>
+                      <div className="flex items-center gap-2 w-full mb-2">
+                        <div className="w-7 h-7 rounded-full bg-blue-600 text-white font-semibold flex items-center justify-center">
+                          {String.fromCharCode(65 )}
+                        </div>
+                        <Input
+                          placeholder="Your answer here"
+                          className="flex-1 bg-gray-100"
+                        />
+                        <Button
+                          type="text"
+                          icon={<HolderOutlined />}
+                        />
+                        <Button
+                          type="text"
+                          icon={<DeleteOutlined />}
+                          danger
+                        />
+                      </div>
+                      
+                    </Form.Item>
+                    
                 </div>
               </Form>
             </div>
