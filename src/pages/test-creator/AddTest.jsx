@@ -22,13 +22,18 @@ function AddTest(props) {
          { id: 1, title: "What isasdasdasdadsasdaasd React?" },
       { id: 1, title: "What isasdasdasdadsasdaasd React?" },
        { id: 1, title: "What isasdasdasdadsasdaasd React?" },
+         { id: 1, title: "What isasdasdasdadsasdaasd React?" },
+       { id: 1, title: "What isasdasdasdadsasdaasd React?" },
+         { id: 1, title: "What isasdasdasdadsasdaasd React?" },
+      { id: 1, title: "What isasdasdasdadsasdaasd React?" },
+       { id: 1, title: "What isasdasdasdadsasdaasd React?" },
   ]);
 
   const [title, setTitle] = useState("");
 
   return (
     <main className="h-screen flex flex-col w-full bg-gray-50 text-gray-900 ">
-      <nav className="top-0 z-10 bg-white shadow-sm flex items-center justify-between h-[70px] max-h-[70px]">
+      <nav className="h-[70px] max-h-[70px] top-0 z-10 bg-white shadow-sm flex items-center justify-between ">
         <div className=" px-3 lg:px-5 lg:pl-3 flex items-center gap-5">
           <button className="text-gray-500 hover:text-gray-700 bg-gray-100 px-2 py-2 rounded">
             <svg
@@ -75,15 +80,22 @@ function AddTest(props) {
         </div>
       </nav>
 
-      <div className="flex-1 px-4 py-3 grid grid-cols-[250px_1fr] gap-2 overflow-hidden max-h-[calc(100vh-70px)]">
-        <div className="bg-wild-sand-50 px-3 py-2 hidden sm:flex flex-col h-full">
-          <h2 className="font-OppenSans mb-3 w-full bg-amber-50">Questions (1)</h2>
-          <ul className="flex-1 overflow-y-auto pr-1 max-h-screen">
+      <div className="flex-1 px-4 py-3 grid grid-cols-[300px_1fr] gap-2 overflow-hidden">
+        <div className="bg-wild-sand-50 px-3 py-2 hidden sm:flex flex-col border border-gray-300 rounded">
+          <div className="flex justify-between mb-3 w-full bg-transparent">
+            <h2 className="font-OppenSans ">Questions (1)</h2>
+            <button className="rounded-full bg-white outline outline-gray-700">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </button>
+          </div>
+          <ul className="flex-1 overflow-y-auto max-h-[calc(100vh-250px)]">
             {questions.map((question, index) => (
               <li key={index}>
                 <div className="flex flex-col gap-3 bg-gray-100 p-2 border border-gray-400 rounded mb-2 hover:bg-gray-100 transition-colors">
                     <a className="block p-2 items-center truncate overflow-hidden">
-                        <span className="inline-block text-md w-5 h-5 text-center mr-2 leading-5 bg-gray-300 rounded-full ">{index + 1}</span>
+                        <span className="inline-block w-7 h-7 leading-7 text-md text-center mr-2 bg-gray-300 rounded-full ">{index + 1}</span>
                         <span className="font-OppenSans text-sm font-bold">{question.title}</span>
                     </a>
                     <div className='flex items-center justify-between px-2 py-'>
@@ -99,8 +111,12 @@ function AddTest(props) {
               </li>
             ))}
           </ul>
+          <div className="flex justify-between items-center mt-3">
+              <button></button>
+          </div>
+           
         </div>
-        <div className=" bg-amber-100 ">right</div>
+        <div className=" bg-white-100 ">right</div>
       </div>
     </main>
   );
