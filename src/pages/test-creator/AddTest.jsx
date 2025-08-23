@@ -33,8 +33,8 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 
-import QuestionEditor from "./QuestionCardHeader";
-
+import QuestionCardHeader from "./QuestionCardHeader";
+import QuestionTitle from "./QuestionTitle";
 
 
 
@@ -43,7 +43,6 @@ function AddTest(props) {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
-  const [title, setTitle] = useState("");
 
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
@@ -71,23 +70,10 @@ function AddTest(props) {
             <div className="mt-10 px-3 py-4 min-w-2xl mb-2 border rounded-md border-gray-300">
               
               <Form name={`form_${index}`} className=" w-full space-y-2 ">
-                <QuestionEditor />
+                <QuestionCardHeader />
                 <Divider />
                 <div>
-                  <Form.Item
-                    className="font-bold"
-                    layout="vertical"
-                    label="Question 1"
-                    name="Question"
-                    rules={[{ required: true }]}
-                  >
-                    <Input.TextArea
-                      placeholder="Type your question here..."
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      rows={4}
-                    />
-                  </Form.Item>
+                  <QuestionTitle />
                   <Form.Item
                     label="Choices"
                     name="Choices"
