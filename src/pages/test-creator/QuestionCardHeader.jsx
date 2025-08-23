@@ -19,7 +19,7 @@ const menuItems = [
 ];
 
 
-function QuestionEditor(props) {
+function QuestionCardHeader(props) {
     return (
         <div className="flex items-center justify-between">
                   <Form.Item noStyle>
@@ -97,4 +97,4 @@ function QuestionEditor(props) {
     );
 }
 
-export default QuestionEditor;
+export default QuestionCardHeader;

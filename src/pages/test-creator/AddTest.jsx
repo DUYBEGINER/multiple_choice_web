@@ -33,7 +33,7 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 
-import QuestionEditor from "./QuestionEditor";
+import QuestionEditor from "./QuestionCardHeader";
 
 
 
