@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import './App.css'
 import HomePage from './pages/HomePage';
-import {listenQuizs, addNewQuiz} from "./api/quizApi"; // 🔹 Import hàm thêm quiz
-
-import QuizCreator from '@/pages/quiz-creator/index';
+import CreateQuizPage from '@/pages/quizCreator/CreateQuizPage';
 
 
 function App() {
@@ -27,7 +25,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/quiz-creator" element={<QuizCreator/>} />
+        <Route path="/quiz-creator" element={<CreateQuizPage/>} />
       </Routes>
     </Router>
   )

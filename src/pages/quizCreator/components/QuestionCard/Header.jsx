@@ -1,14 +1,8 @@
 import React from 'react';
 import { Form, Select, Switch, Dropdown, Button, Menu } from 'antd';
 import {
-  UserOutlined,
-  SearchOutlined,
   EllipsisOutlined,
-  PlusOutlined,
-  MinusOutlined,
-  HolderOutlined,
   DeleteOutlined,
-  SettingOutlined,
   EditOutlined,
 } from "@ant-design/icons";
 
@@ -19,7 +13,7 @@ const menuItems = [
 ];
 
 
-function QuestionCardHeader(props) {
+function Header(props) {
     return (
         <div className="flex items-center justify-between">
                   <Form.Item noStyle>
@@ -97,4 +91,4 @@ function QuestionCardHeader(props) {
     );
 }
 
-export default QuestionCardHeader;
+export default Header;

@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
 import {Form, Input} from 'antd';
 
-  
-
-
-function QuestionTitle(props) {
+function Title(props) {
 
     const [title, setTitle] = useState("");
 
@@ -28,4 +25,4 @@ function QuestionTitle(props) {
     );
 }
 
-export default QuestionTitle;
+export default Title;

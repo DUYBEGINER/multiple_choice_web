@@ -3,23 +3,11 @@ import {
   Input,
   Form,
   Select,
-  Switch,
-  Button,
-  Upload,
-  message,
-  Space,
-  Dropdown,
-  Menu,
 } from "antd";
 
-import QuestionCardHeader from "./QuestionCardHeader";
-import QuestionTitle from "./QuestionTitle";
-import ChoiceSToolbar from "./ChoicesToolbar";
-import CorrectAnswerPicker from "./CorrectAnswerPicker";
 
 
-
-function QuestionFooter(props) {
+function Footer(props) {
   return (
     <div className="flex gap-4">
       <Form.Item
@@ -102,4 +90,4 @@ function QuestionFooter(props) {
   );
 }
 
-export default QuestionFooter;
+export default Footer;

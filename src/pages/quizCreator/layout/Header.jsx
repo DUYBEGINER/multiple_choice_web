@@ -30,8 +30,6 @@ function Header(props) {
           <h1>Tiêu đề nằm ở đây</h1>
         </div>
 
-
-
         <div className="flex items-center gap-4 pr-2">
           <button className="p-3 bg-wild-sand-100 rounded-md"><SettingOutlined /></button>
           <button className=" btn bg-wild-sand-50 hover:bg-wild-sand-100">
