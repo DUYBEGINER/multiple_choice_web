@@ -21,8 +21,15 @@ import {
   message,
   Space,
   Dropdown,
+  Divider,
   Menu,
 } from "antd";
+
+import QuestionCardHeader from "./QuestionCardHeader";
+import QuestionTitle from "./QuestionTitle";
+import ChoiceSToolbar from "./ChoicesToolbar";
+import CorrectAnswerPicker from "./CorrectAnswerPicker";
+import QuestionFooter from "./QuestionFooter";
 
 function QuestionCard(props) {
 

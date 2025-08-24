@@ -3,8 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import './App.css'
 import HomePage from './pages/HomePage';
 import {listenQuizs, addNewQuiz} from "./api/quizApi"; // 🔹 Import hàm thêm quiz
-import Test from './pages/test-creator/AddTest';
-import AddTest from './pages/test-creator/AddTest';
+
+import AddTest from './pages/quiz-creator/AddTest';
+
+
 function App() {
   // const [count, setCount] = useState(0)
   // const [testList, setTestList] = useState([]);

@@ -16,7 +16,7 @@ import QuestionCardHeader from "./QuestionCardHeader";
 import QuestionTitle from "./QuestionTitle";
 import ChoiceSToolbar from "./ChoicesToolbar";
 import CorrectAnswerPicker from "./CorrectAnswerPicker";
-import QuestionFooter from "./QuestionFooter";
+
 
 
 function QuestionFooter(props) {
