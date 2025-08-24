@@ -39,7 +39,7 @@ import CorrectAnswerPicker from "./CorrectAnswerPicker";
 import QuestionFooter from "./QuestionFooter";
 import QuestionCard from "./QuestionCard";
 
-function AddTest(props) {
+function QuizCreator(props) {
 
   return (
     <main className="h-screen flex flex-col w-full bg-gray-50 text-gray-900 ">
@@ -66,4 +66,4 @@ function AddTest(props) {
   );
 }
 
-export default AddTest;
+export default QuizCreator;

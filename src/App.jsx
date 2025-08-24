@@ -4,7 +4,7 @@ import './App.css'
 import HomePage from './pages/HomePage';
 import {listenQuizs, addNewQuiz} from "./api/quizApi"; // 🔹 Import hàm thêm quiz
 
-import AddTest from './pages/quiz-creator/AddTest';
+import QuizCreator from '@/pages/quiz-creator/index';
 
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/creator" element={<AddTest addTest={AddTest} />} />
+        <Route path="/quiz-creator" element={<QuizCreator/>} />
       </Routes>
     </Router>
   )
