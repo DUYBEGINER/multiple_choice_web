@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import { validateSignup } from '../../utils/validator';
-
+import { signUp} from '../../firebase/auth';
 
 
 function SignUpPage(props) {
@@ -50,6 +50,12 @@ function SignUpPage(props) {
         if (result.valid) {
           // Submit form
           console.log("Form data is valid. Submitting...", formData);
+          const user = await signUp(formData.email, formData.password);
+          if (user) {
+            console.log("User signed up successfully:", user);
+          } else {
+            console.error("Error signing up user");
+          }
         } else {
           // Show errors
           setErrorInputs(result.errors);

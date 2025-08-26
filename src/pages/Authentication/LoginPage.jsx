@@ -1,13 +1,25 @@
 import React, { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
-
+import { login } from '../../firebase/auth';
 
 function LoginPage(props) {
 
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
   const [showPassword, setShowPassword] = useState(false);
 
+  //Cái này có thể viết hàm tái sử dụng
+   const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    };
 
   // Define fields for the form
   const fields = [
@@ -20,6 +32,18 @@ function LoginPage(props) {
     },
   ];
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const email = formData.email;
+    const password = formData.password;
+    const user = await login(email, password);
+    if (user) {
+      console.log("User logged in successfully:", user);
+    } else {
+      console.error("Error logging in user");
+    }
+  }
+
   return (
     <div className="flex min-h-full h-screen items-center justify-center lg:px-8 bg-blue-violet-900">
       <div className="w-2xl p-5 rounded-lg shadow-md bg-white">
@@ -29,7 +53,7 @@ function LoginPage(props) {
           </h2>
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <div key={field.id} className="space-y-1">
                 <label
@@ -42,6 +66,8 @@ function LoginPage(props) {
                   <input
                     type={field.type}
                     name={field.id}
+                    value={formData[field.id] || ""}
+                    onChange={handleChange}
                     className="w-full border border-gray-300 p-2 rounded-lg outline-gray-300"
                     placeholder={field.label}
                   />

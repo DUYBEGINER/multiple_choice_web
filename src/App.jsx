@@ -21,7 +21,6 @@ function App() {
   //   };
   //   await addNewQuiz(newTest);
   // };
-
   return (
     <Router>
       <Routes>
