@@ -18,7 +18,6 @@ function LoginPage(props) {
       label: "Password",
       toggle: true,
     },
-
   ];
 
   return (
