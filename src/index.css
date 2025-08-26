@@ -56,9 +56,18 @@
 --color-porcelain-900: #333e47;
 --color-porcelain-950: #22292f;
 
+--animate-rotate-bg: rotate-bg 10s linear infinite;
+
 
 }
 
+@keyframes rotate-bg {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 50% 100%; }
+  50%  { background-position: 100% 50%; }
+  75%  { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
 
 @layer components {
   .btn {
