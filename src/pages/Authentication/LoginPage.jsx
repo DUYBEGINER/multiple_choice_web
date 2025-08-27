@@ -37,8 +37,9 @@ function LoginPage(props) {
     const email = formData.email;
     const password = formData.password;
     const user = await login(email, password);
+    console.log("user", user);
     if (user) {
-      console.log("User logged in successfully:", user);
+      console.log("User logged ĩn successfully:", user);
     } else {
       console.error("Error logging in user");
     }
