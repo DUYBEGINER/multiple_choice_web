@@ -1,13 +1,19 @@
 import React, {useState, createContext, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig';
+import { useLocation } from 'react-router-dom';
 
-const AuthContext = createContext();
+
+export const AuthContext = createContext();
 
 function AuthProvider({children}) {
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [user, setUser] = useState(null);
+    const key = Object.keys(localStorage).find(k => k.includes("firebase:authUser"));
+    console.log("JSON: ",JSON.parse(localStorage.getItem(key)));
+
+    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -15,13 +21,14 @@ function AuthProvider({children}) {
             setUser(user);
             console.log("Auth state changed: ", user);
             if(user){
-                setLoading(false);
-                navigate('/quiz-creator');
-                
+                navigate('/quiz-creator', { replace: true });
             }else{
-                setLoading(false);
-                navigate('/login');
+                setUser({});
+                if(location.pathname !== '/signup' && location.pathname !== '/login'){
+                    navigate('/login', { replace: true });
+                }
             }
+            setLoading(false);
         })
         //Clean function
         return () => unsubscribe();
@@ -29,7 +36,7 @@ function AuthProvider({children}) {
 
 
     return (
-        <AuthContext.Provider value={{ user}}>
+        <AuthContext.Provider value={{ user, loading }}>
             {loading ? <div>Loading...</div> : children}
         </AuthContext.Provider>
     );

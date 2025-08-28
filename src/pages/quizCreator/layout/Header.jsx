@@ -1,8 +1,22 @@
-import React from 'react';
+import React , {useCallback} from 'react';
 import {SettingOutlined} from "@ant-design/icons";
-
+import {logout} from "@/firebase/auth";
 
 function Header(props) {
+
+
+    const handleLogout = async () => {
+      try {
+        await logout();
+        console.log("Đăng xuất thành công");
+        // Có thể navigate tới trang login
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert("Có lỗi xảy ra, vui lòng thử lại");
+      }
+    };
+
+    
     return (
         <nav className="h-[70px] max-h-[70px] top-0 z-10 bg-white shadow-sm flex items-center justify-between ">
         <div className=" px-3 lg:px-5 lg:pl-3 flex items-center gap-5">
@@ -49,6 +63,7 @@ function Header(props) {
             </svg>
             <span>Preview</span>
           </button>
+          <button className="btn text-white bg-red-600 hover:bg-red-800" onClick={handleLogout}>Logout</button>
           <button className="btn text-white bg-blue-violet-600 hover:bg-blue-violet-800">Publish</button>
         </div>
       </nav>
