@@ -2,9 +2,9 @@ import 'dotenv/config.js';  // Import config without the need to call dotenv.con
 import app from "./app.js";
 
 
+//specify port to run app 
+
 const PORT = process.env.PORT || 3000;
-
-
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
