@@ -1,21 +1,14 @@
 import express from "express";
-import { signupUser } from "./controllers/authController.js";
 const app = express()
 
-app.use(express.json())
+/// Middleware ///
+// Parse JSON bodies
+app.use(express.json());
 
-app.post('/signup', signupUser);
+//import routes
+import authRouter from './routes/authRoute.js';
 
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-
-app.post('/user', (req, res) => {
-  const user = req.body;
-  res.status(201).json({ message: 'User created', user });
-});
-
+// Use routes
+app.use('/auth', authRouter);
 
 export default app;

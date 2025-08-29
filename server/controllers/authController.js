@@ -1,13 +1,13 @@
 import { getPool } from "../db/config.js";
 
 
-const signupUser = async (req, res) => {
+const signUp = async (req, res) => {
   const { email, displayName } = req.body;
-
+  console.log("Signing up user:", email, displayName);
   try{
     const pool = await getPool();
     await pool.request()
-    .input('uid', 'aasdasssdsda')
+    .input('uid', 'adzxc12xx3')
       .input('email', email)
       .input('displayName', displayName)
       .query('INSERT INTO users (uid, email, displayName) VALUES (@uid, @email, @displayName);');
@@ -18,4 +18,4 @@ const signupUser = async (req, res) => {
   }
 };
 
-export { signupUser };
+export { signUp };
