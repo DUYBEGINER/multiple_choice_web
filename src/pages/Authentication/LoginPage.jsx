@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
-import { login } from '../../firebase/auth';
+import { signIn } from '../../firebase/auth';
+import {getUser} from '../../api/authAPI'
 
 function LoginPage(props) {
-
 
   const [formData, setFormData] = useState({
     email: '',
@@ -37,12 +37,15 @@ function LoginPage(props) {
     e.preventDefault();
     const email = formData.email;
     const password = formData.password;
-    const user = await login(email, password);
-    console.log("user", user);
+    const token = await signIn(email, password);
+
+    const user = await getUser(token);
+
+    console.log("user after fetch", user);
     if (user) {
-      console.log("User logged ĩn successfully:", user);
+      console.log("User logged in successfully:", user);
     } else {
-      console.error("Error logging in user");
+      window.alert("Error logging in user");
     }
   }
 

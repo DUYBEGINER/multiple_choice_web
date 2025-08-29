@@ -33,7 +33,6 @@ function AuthProvider({children}) {
         return () => unsubscribe();
     }, [navigate])
 
-
     return (
         <AuthContext.Provider value={{ user, loading }}>
             {loading ? <div>Loading...</div> : children}

@@ -6,6 +6,7 @@ export const signUp = async (email, password, displayName) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     // Signed up
     const user = userCredential.user;
+    // const token = await user.getIdToken();
     await updateProfile(user, { displayName });
     console.log("upodate!")
     return user;
@@ -16,19 +17,17 @@ export const signUp = async (email, password, displayName) => {
   }
 }
 
-export const login = async (email, password) => {
+export const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     // Logged in
     const user = userCredential.user;
 
     const token = await user.getIdToken();
-    console.log("IdToken: ", token);
-    
-    return user;
+
+    return token;
   } catch (error) {
     // Handle Errors here.
- 
     return error;
   }
 }

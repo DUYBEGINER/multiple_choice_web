@@ -1,9 +1,9 @@
 import express from "express";
-const router = express.Router()
-
 //import function
-import {signUp} from '../controllers/authController.js'
+import {login, signUp} from '../controllers/authController.js'
+import { authMiddleware } from "../middleware/verifyToken.js";
 
+const router = express.Router()
 
 // middleware that is specific to this router
 const timeLog = (req, res, next) => {
@@ -32,6 +32,7 @@ router.use(timeLog)
 //     res.json(userInfo);
 // })
 
-router.post('/signup', signUp)
+router.post('/login', authMiddleware, login);
+router.post('/signup', signUp);
 
 export default router;
