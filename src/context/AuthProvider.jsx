@@ -19,7 +19,6 @@ function AuthProvider({children}) {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             setUser(user);
-            console.log("Auth state changed: ", user);
             if(user){
                 navigate('/quiz-creator', { replace: true });
             }else{
