@@ -20,17 +20,17 @@ const timeLog = (req, res, next) => {
 router.use(timeLog)
 
 
-router.get('/user-info', (req, res) => {
-    const userId = req.body.userId;
-    console.log("Fetching info for user ID:", userId);
-    // Fetch user information from the database or any other source
-    const userInfo = {
-        id: userId,
-        name: "John Doe",
-        email: "john.doe@example.com"
-    };
-    res.json(userInfo);
-})
+// router.get('/user-info', (req, res) => {
+//     const userId = req.body.userId;
+//     console.log("Fetching info for user ID:", userId);
+//     // Fetch user information from the database or any other source
+//     const userInfo = {
+//         id: userId,
+//         name: "John Doe",
+//         email: "john.doe@example.com"
+//     };
+//     res.json(userInfo);
+// })
 
 router.post('/signup', signUp)
 

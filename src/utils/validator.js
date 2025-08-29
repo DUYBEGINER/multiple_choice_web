@@ -8,8 +8,8 @@ export const patterns = {
   // Mật khẩu mạnh: >=8, có thường, HOA, số, ký tự đặc biệt
   passwordStrong: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/,
 
-  // Display Name: 3-20 ký tự, chữ/số/_ , không khoảng trắng
-  displayName: /^(?=.{3,20}$)[a-zA-Z0-9_]+$/,
+  // Display Name: 3-20 ký tự, chữ/số/_ , có thể có khoảng trắng
+  displayName: /^(?=.{3,20}$)[\p{L}\p{N}_\s]+$/u,
 
   // Họ tên (có dấu, cho phép khoảng trắng, dấu . ' - ), độ dài 2-50
   fullName: /^[\p{L}][\p{L}\s'.-]{0,48}[\p{L}]$/u,
@@ -44,7 +44,7 @@ export function validateSignup(form) {
 
   if (displayName && !patterns.displayName.test(displayName)) {
     errors.displayName =
-      "Display Name 3-20 ký tự, chỉ gồm chữ/số/underscore, không khoảng trắng.";
+      "Tên 3-20 ký tự, chỉ gồm chữ/số/underscore, có thể có khoảng trắng.";
   }
 
   return {

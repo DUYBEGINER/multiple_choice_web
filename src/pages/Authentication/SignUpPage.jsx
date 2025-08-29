@@ -50,7 +50,7 @@ function SignUpPage(props) {
         if (result.valid) {
           // Submit form
           console.log("Form data is valid. Submitting...", formData);
-          const user = await signUp(formData.email, formData.password);
+          const user = await signUp(formData.email, formData.password, formData.displayName);
           if (user) {
             console.log("User signed up successfully:", user);
           } else {
@@ -62,7 +62,7 @@ function SignUpPage(props) {
         }
       }
 
-    console.log("formData", formData);
+    // console.log("formData", formData);
 
     return (
       <div className="flex min-h-full h-screen items-center justify-center lg:px-8 bg-blue-violet-900">
