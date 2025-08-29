@@ -21,7 +21,10 @@ export const login = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     // Logged in
     const user = userCredential.user;
-    console.log("Current User:", auth.currentUser);
+
+    const token = await user.getIdToken();
+    console.log("IdToken: ", token);
+    
     return user;
   } catch (error) {
     // Handle Errors here.
