@@ -1,8 +1,11 @@
 import express from "express";
+import { signupUser } from "./controllers/authController.js";
 const app = express()
 
 
 app.use(express.json())
+
+app.post('/signup', signupUser);
 
 
 app.get('/', (req, res) => {
