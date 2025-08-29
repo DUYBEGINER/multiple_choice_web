@@ -29,6 +29,4 @@ async function getPool() {
 }
 
 
-await getPool();
-
 export {mssql, getPool};
