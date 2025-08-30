@@ -19,18 +19,14 @@ import { auth } from "./firebaseConfig";
 
 export const signUp = async (email, password, displayName) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    const {user} = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName });
-    // Lấy lại user và token mới nhất
-    await user.reload();
-    const refreshedUser = auth.currentUser;
-    console.log("Updated user:", refreshedUser);
-    const token = await refreshedUser.getIdToken(true); // force refresh
+     
+    const token = await user.getIdToken(true); // force refresh
     return token;
   } catch (error) {
-    console.error("Error signing up:", error);
-    return error;
+    console.error('Error signing up:', error);
+    throw error;
   }
 }
 

@@ -7,9 +7,9 @@ const login = async (req, res) => {
    try{
     const pool = await getPool();
     const result = await pool.request()
-    .input('uid', uid)
-    .query('SELECT * FROM users WHERE uid = @uid;');
-    console.log("Login query result:", result);
+      .input('uid', uid)
+      .query('SELECT * FROM users WHERE uid = @uid;');
+      
     if (result.recordset.length > 0) {
       const userData = result.recordset[0];
       res.status(200).json({ message: 'User logged in successfully', user: userData });
@@ -24,19 +24,28 @@ const login = async (req, res) => {
 
 
 const signUp = async (req, res) => {
-  const user = req.user;
-  console.log("Signing up user:", user);
+  const { uid, email } = req.user;
+  const { displayName } = req.body;  // frontend gửi displayName lên
   try{
     const pool = await getPool();
+    const existing = await pool.request()
+    .input('uid', uid)
+    .query('SELECT * FROM users WHERE uid = @uid;');
+
+    if(existing.recordset.length > 0){
+      return res.status(409).json({ message: 'User already exists' });
+    }
+
     await pool.request()
-    .input('uid', user.uid)
-      .input('email', user.email)
-      .input('displayName', user.displayName)
+      .input('uid', uid)
+      .input('email', email)
+      .input('displayName', displayName)
       .query('INSERT INTO users (uid, email, displayName) VALUES (@uid, @email, @displayName);');
-    res.status(201).json({ message: 'User signed up successfully' });
+
+      return res.status(201).json({ message: 'User signed up successfully' });
     } catch (error) {
-    console.error('Error signing up user:', error);
-    res.status(500).json({ message: 'Internal server error' });
+      console.error('Error signing up user:', error);
+      res.status(500).json({ message: 'Internal server error' });
   }
 };
 
