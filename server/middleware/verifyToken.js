@@ -5,9 +5,8 @@ import { getAuth } from "firebase-admin/auth";
 
 const authMiddleware = async (req, res, next) =>{
     const authHeader = req.headers.authorization;
-    console.log(req.headers.authorization);
     const token = authHeader.split(' ')[1];
-    console.log("token:", token);
+    console.log("Authorization header:", authHeader);
     console.log("authHeader:", authHeader.startsWith('Bearer '));
     if( !token || !authHeader.startsWith('Bearer ')){
         return res.status(401).json({ message: 'Unauthorized: No token provided' });
@@ -19,7 +18,6 @@ const authMiddleware = async (req, res, next) =>{
         const decodedToken = await getAuth().verifyIdToken(idToken);
         console.log("Decoded token:", decodedToken);
         req.user = decodedToken;
-       
         next();
     }catch(error){
         console.log("Error verifying token:", error);

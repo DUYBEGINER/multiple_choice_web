@@ -6,10 +6,10 @@ export const signUp = async (email, password, displayName) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     // Signed up
     const user = userCredential.user;
-    // const token = await user.getIdToken();
+    const token = await user.getIdToken();
     await updateProfile(user, { displayName });
     console.log("upodate!")
-    return user;
+    return token;
   } catch (error) {
     // Handle Errors here.
       console.error("Error signing up:", error);

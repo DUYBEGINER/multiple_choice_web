@@ -50,9 +50,9 @@ function SignUpPage(props) {
         if (result.valid) {
           // Submit form
           console.log("Form data is valid. Submitting...", formData);
-          const userCredential = await signUp(formData.email, formData.password, formData.displayName);
+          const userToken = await signUp(formData.email, formData.password, formData.displayName);
 
-          const user = await signUpRequest( userCredential.uid , formData.email, formData.displayName);
+          const user = await signUpRequest(userToken);
 
           if (user) {
             console.log("User signed up successfully:", user);

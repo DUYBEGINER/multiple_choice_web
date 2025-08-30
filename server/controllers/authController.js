@@ -24,15 +24,14 @@ const login = async (req, res) => {
 
 
 const signUp = async (req, res) => {
-  const { uid,  email, displayName } = req.body;
-  // const user = req.user;
-  console.log("Signing up user:", email, displayName);
+  const user = req.user;
+  console.log("Signing up user:", user);
   try{
     const pool = await getPool();
     await pool.request()
-    .input('uid', uid)
-      .input('email', email)
-      .input('displayName', displayName)
+    .input('uid', user.uid)
+      .input('email', user.email)
+      .input('displayName', user.displayName)
       .query('INSERT INTO users (uid, email, displayName) VALUES (@uid, @email, @displayName);');
     res.status(201).json({ message: 'User signed up successfully' });
     } catch (error) {

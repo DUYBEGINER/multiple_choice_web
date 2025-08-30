@@ -17,9 +17,15 @@ const getUser = async (idToken) => {
   }
 };
 
-const signUpRequest = async (uid, email, displayName) => {
+const signUpRequest = async (idToken) => {
   try {
-    const response = await axios.post(`${API_URL}/auth/signup`, { uid, email, displayName });
+    const response = await axios.post(`${API_URL}/auth/signup`, {token: idToken}, {
+         headers: {
+            Authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json"  // Tùy chọn
+        }
+  });
+  console.log('Sign up response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error signing up:', error);
