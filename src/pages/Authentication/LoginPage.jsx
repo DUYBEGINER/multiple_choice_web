@@ -38,14 +38,17 @@ function LoginPage(props) {
     const email = formData.email;
     const password = formData.password;
     const token = await signIn(email, password);
+    try{
+      const user = await getUser(token);
 
-    const user = await getUser(token);
-
-    console.log("user after fetch", user);
-    if (user) {
-      console.log("User logged in successfully:", user);
-    } else {
-      window.alert("Error logging in user");
+      console.log("user after fetch", user);
+      if (user) {
+        console.log("User logged in successfully:", user);
+      } else {
+        window.alert("Error logging in user");
+      }
+    }catch(error){
+      console.log("Error fetching user:", error);
     }
   }
 
