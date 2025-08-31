@@ -1,6 +1,6 @@
 import express from "express";
 //import function
-import {login, signUp} from '../controllers/authController.js'
+import {signIn, signUp} from '../controllers/authController.js'
 import { authMiddleware } from "../middleware/verifyToken.js";
 
 const router = express.Router()
@@ -19,7 +19,7 @@ const timeLog = (req, res, next) => {
 
 router.use(timeLog)
 
-router.post('/login', authMiddleware, login);
+router.post('/login', authMiddleware, signIn);
 router.post('/signup', authMiddleware, signUp);
 
 export default router;

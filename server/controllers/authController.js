@@ -1,7 +1,7 @@
 import { getPool } from "../db/config.js";
 
 
-const login = async (req, res) => {
+const signIn = async (req, res) => {
    const uid = req.user.uid;
    console.log("Logging in user with UID:", uid);
    try{
@@ -10,12 +10,10 @@ const login = async (req, res) => {
       .input('uid', uid)
       .query('SELECT * FROM users WHERE uid = @uid;');
       
-    if (result.recordset.length > 0) {
-      const userData = result.recordset[0];
-      res.status(200).json({ message: 'User logged in successfully', user: userData });
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    if(result.recordset.length === 0){
+      return res.status(404).json({ message: 'User not found' });
     }
+   return res.status(200).json({ message: 'Login successful', user: result.recordset[0] });
    }catch (error){
       console.error('Error logging in user:', error);
       res.status(500).json({ message: 'Internal server error' });
@@ -49,4 +47,4 @@ const signUp = async (req, res) => {
   }
 };
 
-export { login, signUp };
+export { signIn, signUp };

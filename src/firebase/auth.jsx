@@ -21,7 +21,6 @@ export const signUp = async (email, password, displayName) => {
   try {
     const {user} = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName });
-     
     const token = await user.getIdToken(true); // force refresh
     return token;
   } catch (error) {
@@ -36,13 +35,10 @@ export const signIn = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     // Logged in
     const user = userCredential.user;
-
-    const token = await user.getIdToken();
-
-    return token;
+    return await user.getIdToken();
   } catch (error) {
-    // Handle Errors here.
-    return error;
+    console.error("Error signing in:", error);
+    throw error;
   }
 }
 
