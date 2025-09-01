@@ -13,5 +13,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Quan trọng: không lưu trạng thái client-side
+// để chỉ dùng httpOnly cookie từ server
+auth.setPersistence("none");
+
 export { auth };
 export default app;

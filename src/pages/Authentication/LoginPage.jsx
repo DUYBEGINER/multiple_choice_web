@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
-import { signIn } from '../../firebase/auth';
-import {getUser} from '../../api/authAPI'
+import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
+import {signInRequest} from '../../api/authAPI'
 
 function LoginPage(props) {
 
@@ -37,9 +37,9 @@ function LoginPage(props) {
     e.preventDefault();
     const email = formData.email;
     const password = formData.password;
-    const token = await signIn(email, password);
+    const token = await getTokenSignInWithEmailAndPassword(email, password);
     try{
-      const user = await getUser(token);
+      const user = await signInRequest(token);
 
       console.log("user after fetch", user);
       if (user) {

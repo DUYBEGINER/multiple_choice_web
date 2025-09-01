@@ -1,6 +1,5 @@
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword , signOut, updateProfile} from "firebase/auth";
 import { auth } from "./firebaseConfig";
-
 // export const signUp = async (email, password, displayName) => {
 //   try {
 //     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -17,25 +16,13 @@ import { auth } from "./firebaseConfig";
 //   }
 // }
 
-export const signUp = async (email, password, displayName) => {
-  try {
-    const {user} = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(user, { displayName });
-    const token = await user.getIdToken(true); // force refresh
-    return token;
-  } catch (error) {
-    console.error('Error signing up:', error);
-    throw error;
-  }
-}
 
-
-export const signIn = async (email, password) => {
+export const getTokenSignInWithEmailAndPassword = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    // Logged in
-    const user = userCredential.user;
-    return await user.getIdToken();
+    const {user} = await signInWithEmailAndPassword(auth, email, password);
+    // Get idToken
+    const idToken = await user.getIdToken();
+    return idToken;
   } catch (error) {
     console.error("Error signing in:", error);
     throw error;
@@ -43,6 +30,15 @@ export const signIn = async (email, password) => {
 }
 
 
-export const logout = async () => {
-    await signOut(auth);
+export const getTokenSignUpWithEmailAndPassword = async (email, password, displayName) => {
+  try {
+    const {user} = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(user, { displayName });
+    const idToken = await user.getIdToken(true); // force refresh
+    return idToken;
+  } catch (error) {
+    console.error('Error signing up:', error);
+    throw error;
+  }
 }
+

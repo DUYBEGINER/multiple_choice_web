@@ -1,18 +1,37 @@
 import axios from 'axios';
-import { API_URL } from '../utils/API_URL';
+import {axiosClient} from "../utils/axiosClient";
 
-const getUser = async (idToken) => {
-   const res = await axios.post(`${API_URL}/auth/login`, null, {
-    headers: { Authorization: `Bearer ${idToken}` }
+
+
+const checkSession = async () => {
+  try {
+    const res = await axiosClient.get("/me");
+    return res.data.user;
+  } catch (err) {
+    return null;
+  }
+}
+
+const signInRequest = async (idToken) => {
+   const res = await axiosClient.post(`/auth/login`, {}, {
+    headers: { Authorization: `Bearer ${idToken}` },
   });
+  if (!res.ok) throw new Error("Login failed");
   return res.data;
 };
 
 const signUpRequest = async (idToken, displayName) => {
-  const res = await axios.post(`${API_URL}/auth/signup`, { displayName }, {
-    headers: { Authorization: `Bearer ${idToken}` }
+  const res = await axiosClient.post(`/auth/signup`, { displayName }, {
+    headers: { Authorization: `Bearer ${idToken}` },
   });
+   if (!res.ok) throw new Error("Signup failed");
   return res.data;
 };
 
-export { getUser, signUpRequest };
+
+const logOutRequest = async () => {
+  const res = await axiosClient.post(`/auth/logout`);
+  return res.data;
+}
+
+export { signInRequest, signUpRequest, logOutRequest , checkSession};

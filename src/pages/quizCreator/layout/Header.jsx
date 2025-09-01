@@ -1,13 +1,13 @@
 import React , {useCallback} from 'react';
 import {SettingOutlined} from "@ant-design/icons";
-import {logout} from "@/firebase/auth";
+import { logOutRequest } from '../../../api/authAPI';
 
 function Header(props) {
 
 
     const handleLogout = async () => {
       try {
-        await logout();
+        await logOutRequest();
         console.log("Đăng xuất thành công");
         // Có thể navigate tới trang login
       } catch (error) {
