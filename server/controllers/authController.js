@@ -5,6 +5,7 @@ import { createAndSetSessionCookie } from "../services/createSessionCookie.js";
 const getCurrentUser = async (req, res) => {
   try {
     // req.user đã có sẵn từ authMiddleware
+    console.log("[auth controller] Current user auth:", req.user);
     if (!req.user) {
       return res.status(401).json({ message: "Not authenticated" });
     }
@@ -21,6 +22,7 @@ const getCurrentUser = async (req, res) => {
 const signIn = async (req, res) => {
   const uid = req.user.uid;
   const idToken = req.idToken;
+  console.log("Token in signIn:", idToken);
   console.log("Logging in user with UID:", uid);
   try {
     const pool = await getPool();
@@ -50,6 +52,8 @@ const signUp = async (req, res) => {
   const { uid, email } = req.user;
   const idToken = req.idToken;
   const { displayName } = req.body;  // frontend gửi displayName lên
+  console.log("Token in signUp:", idToken);
+  console.log("user sign up:", req.user)
   try {
     const pool = await getPool();
     const existing = await pool.request()

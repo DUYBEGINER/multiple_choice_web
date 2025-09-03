@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, getApp, getApps } from 'firebase/app'
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -10,12 +10,14 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
-const app = initializeApp(firebaseConfig);
+
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
 
 // Quan trọng: không lưu trạng thái client-side
 // để chỉ dùng httpOnly cookie từ server
-auth.setPersistence("none");
+// auth.setPersistence("none");
 
 export { auth };
 export default app;

@@ -18,24 +18,24 @@ function AuthProvider({children}) {
 
 
     useEffect(() => {
-    async function checkSession() {
-      try {
-        const res = await checkSession();
-        setUser(res.data.user);
-        if (location.pathname === "/login" || location.pathname === "/signup") {
-          navigate("/quiz-creator", { replace: true });
+        async function checkUser() {
+            try {
+                const user = await checkSession();
+                setUser(user);
+                if (location.pathname === "/login" || location.pathname === "/signup") {
+                navigate("/quiz-creator", { replace: true });
+                }
+            } catch (err) {
+                setUser(null);
+                if (location.pathname !== "/login" && location.pathname !== "/signup") {
+                navigate("/login", { replace: true });
+                }
+            } finally {
+                setLoading(false);
+            }
         }
-      } catch (err) {
-        setUser(null);
-        if (location.pathname !== "/login" && location.pathname !== "/signup") {
-          navigate("/login", { replace: true });
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    checkSession();
-  }, [navigate, location.pathname]);
+        checkUser();
+  }, [navigate]);
     // useEffect(() => {
     //     const unsubscribe = auth.onAuthStateChanged((user) => {
     //         setUser(user);

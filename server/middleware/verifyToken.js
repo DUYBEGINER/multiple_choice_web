@@ -12,6 +12,7 @@ const authMiddleware = async (req, res, next) => {
   if(sessionCookie){
     try{
       req.user = await getAuth().verifySessionCookie(sessionCookie, true);
+      console.log("[auth middleware] USE SESSION COOKIE:", req.user);
       return next();
     }catch(error){
       res.clearCookie('session');
@@ -30,6 +31,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     const decodedToken = await getAuth().verifyIdToken(idToken, checkRevoked);
     req.user = decodedToken;
+    console.log("[auth middleware] USE BEARER TOKEN:", req.user);
     req.idToken = idToken;
     return next();
   } catch (err) {

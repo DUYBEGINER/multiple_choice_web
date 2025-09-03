@@ -21,6 +21,7 @@ const timeLog = (req, res, next) => {
 router.use(timeLog)
 
 router.get("/me", authMiddleware, getCurrentUser);
+
 router.post('/login', authMiddleware, signIn);
 router.post('/signup', authMiddleware, signUp);
 router.post('/logout', authMiddleware, async (req, res) => {
