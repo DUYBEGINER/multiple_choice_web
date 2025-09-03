@@ -2,6 +2,7 @@ import {createUserWithEmailAndPassword, signInWithEmailAndPassword , signOut, up
 import { auth } from "./firebaseConfig";
 
 
+//Get token login 
 export const getTokenSignInWithEmailAndPassword = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -15,7 +16,7 @@ export const getTokenSignInWithEmailAndPassword = async (email, password) => {
   }
 }
 
-
+//Get token sign up
 export const getTokenSignUpWithEmailAndPassword = async (email, password, displayName) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);

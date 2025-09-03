@@ -7,41 +7,34 @@ import { getAuth } from "firebase-admin/auth";
 const authMiddleware = async (req, res, next) => {
   
   // đọc cookie "session" (nhờ cookie-parser đã parse)
-  const sessionCookie = req.cookies?.session;
+  // const sessionCookie = req.cookies?.session;
 
-  if(sessionCookie){
-    try{
-      req.user = await getAuth().verifySessionCookie(sessionCookie, true);
-      console.log("[auth middleware] USE SESSION COOKIE:", req.user);
-      return next();
-    }catch(error){
-      res.clearCookie('session');
-      return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
-    }
-  }
+  // if(sessionCookie){
+  //   try{
+  //     req.user = await getAuth().verifySessionCookie(sessionCookie, true);
+  //     console.log("[auth middleware] USE SESSION COOKIE:", req.user);
+  //     return next();
+  //   }catch(error){
+  //     res.clearCookie('session');
+  //     return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
+  //   }
+  // }
 
-  // fallback: kiểm tra Bearer token
+  // Kiểm tra Bearer token
   const authHeader = req.headers.authorization || '';
   if (!authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Unauthorized: missing or invalid token' });
   }
-  
   const idToken = authHeader.slice(7).trim();
-  let checkRevoked = true;
   try {
-    const decodedToken = await getAuth().verifyIdToken(idToken, checkRevoked);
+    const decodedToken = await getAuth().verifyIdToken(idToken);
     req.user = decodedToken;
     console.log("[auth middleware] USE BEARER TOKEN:", req.user);
     req.idToken = idToken;
     return next();
   } catch (err) {
-    if (err.code == 'auth/id-token-revoked') {
-      console.error('Token revoked:', err);
-      return res.status(401).json({ message: 'Token has been revoked' });
-    }else{
-      console.error('Error verifying token:', err);
-      return res.status(401).json({ message: 'Unauthorized: invalid token' });
-    }
+    console.log("Error verifying ID token:", err);
+    return res.status(401).json({ message: 'You are not authorized to access this resource' });
   }
 };
 

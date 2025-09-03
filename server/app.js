@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 const app = express()
 
 const corsOptions = { origin: process.env.CLIENT_ORIGIN || true, credentials: true };
+
 /// Middleware ///
 // Parse JSON bodies
 app.use(express.json());
