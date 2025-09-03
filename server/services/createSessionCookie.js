@@ -6,7 +6,7 @@ import { getAuth } from "firebase-admin/auth";
  * @param {Response} res - đối tượng Express response
  * @param {string} idToken - Firebase ID token từ client
  */
-export async function createAndSetSessionCookie(res, idToken) {
+export async function createAndSetSessionCookie(idToken) {
   const expiresIn = parseInt(process.env.SESSION_EXPIRES_MS, 10) || 24 * 60 * 60 * 1000; // 1 ngày
   const sessionCookie = await getAuth().createSessionCookie(idToken, { expiresIn });
 

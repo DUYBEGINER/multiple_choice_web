@@ -2,6 +2,26 @@ import app from "../firebase/firebase.js";
 import { getAuth } from "firebase-admin/auth";
 
 
+const checkSession = async (req, res, next) => {
+
+  const sessionCookie = req.cookies.session;
+  if(!sessionCookie) return false;
+  try {
+    const decodedClaims = await getAuth().verifySessionCookie(sessionCookie, true);
+    console.log("[auth middleware] USE SESSION COOKIE:", decodedClaims);
+
+    if(!decodedClaims.email) return res.status(401).json({ message: "Unauthorized: Invalid session" });
+
+     // Gắn user info vào req để dùng sau
+    req.user = decodedClaims;
+
+    next();
+  } catch (error) {
+    res.clearCookie('session');
+    return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
+  }
+ 
+}
 
 // const auth = getAuth(admin);
 const authMiddleware = async (req, res, next) => {
@@ -38,4 +58,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-export {authMiddleware}
+export {authMiddleware, checkSession }

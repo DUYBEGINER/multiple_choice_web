@@ -6,8 +6,8 @@ import {axiosClient} from "../utils/axiosClient";
 const checkSession = async () => {
   try {
     const res = await axiosClient.get("/auth/me");
-    console.log("res check session:", res)
-    return res.data.user;
+    console.log("res check session:", res.data)
+    return res.data;
   } catch (err) {
     return null;
   }
@@ -17,7 +17,7 @@ const signInRequest = async (idToken) => {
    const res = await axiosClient.post(`/auth/login`, {}, {
     headers: { Authorization: `Bearer ${idToken}` },
   });
-  console.log("res login:" , res.ok)
+  console.log("res login:" , res.data)
   return res.data;
 };
 
@@ -32,6 +32,7 @@ const signUpRequest = async (idToken, displayName) => {
 
 const logOutRequest = async () => {
   const res = await axiosClient.post(`/auth/logout`);
+  console.log("res logout:", res)
   return res.data;
 }
 
