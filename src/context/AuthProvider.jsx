@@ -15,8 +15,6 @@
 //     const [user, setUser] = useState({});
 //     const [loading, setLoading] = useState(true);
 
-
-
 //     useEffect(() => {
 //         async function checkUser() {
 //             try {
@@ -79,11 +77,15 @@ function AuthProvider({ children }) {
       try {
         const user = await checkSession(); // gọi API backend
         setUser(user);
-
-        // Nếu đang ở /login hoặc /signup mà đã đăng nhập -> chuyển hướng
-        if (location.pathname === "/login" || location.pathname === "/signup") {
-          navigate("/quiz-creator", { replace: true });
+        if (user) {
+          if (
+            location.pathname === "/login" ||
+            location.pathname === "/signup"
+          ) {
+            navigate("/quiz-creator", { replace: true });
+          }
         }
+        // Nếu đang ở /login hoặc /signup mà đã đăng nhập -> chuyển hướng
       } catch (err) {
         setUser(null);
 

@@ -25,7 +25,7 @@ router.get("/me", checkSession , getCurrentUser);
 router.post('/login', authMiddleware, signIn);
 router.post('/signup', authMiddleware, signUp);
 router.post('/logout', authMiddleware, async (req, res) => {
-  await getAuth().revokeToken(req.user.uid);
+  await getAuth().revokeRefreshTokens(req.user.uid);
   res.clearCookie('session');
   return res.status(200).json({ message:'Logout successful' });
 });
