@@ -2,7 +2,6 @@ import axios from 'axios';
 import {axiosClient} from "../utils/axiosClient";
 
 
-
 const checkSession = async () => {
   try {
     const res = await axiosClient.get("/auth/me");

@@ -5,7 +5,7 @@ import { getAuth } from "firebase-admin/auth";
 const checkSession = async (req, res, next) => {
 
   const sessionCookie = req.cookies.session;
-  if(!sessionCookie) return false;
+  if(!sessionCookie) return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
   try {
     const decodedClaims = await getAuth().verifySessionCookie(sessionCookie, true);
     console.log("[auth middleware] USE SESSION COOKIE:", decodedClaims);

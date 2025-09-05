@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import { validateSignup } from '../../utils/validator';
 import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
-import {signUpRequest} from "../../api/authAPI";
+import {signUpRequest, signInRequest} from "../../api/authAPI";
 
 function SignUpPage(props) {
 
@@ -52,7 +52,7 @@ function SignUpPage(props) {
           console.log("Form data is valid. Submitting...", formData);
           const token = await getTokenSignUpWithEmailAndPassword(formData.email, formData.password, formData.displayName);
 
-          const user = await signUpRequest(token, formData.displayName);
+          const user = await signInRequest(token);
 
           if (user) {
             console.log("User signed up successfully:", user);
