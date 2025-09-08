@@ -25,9 +25,22 @@ router.get("/me", checkSession , getCurrentUser);
 router.post('/login', authMiddleware, signIn);
 router.post('/signup', authMiddleware, signUp);
 router.post('/logout', authMiddleware, async (req, res) => {
-  await getAuth().revokeRefreshTokens(req.user.uid);
-  res.clearCookie('session');
+  try{
+    console.log("Logging out user:", req.user);
+    await getAuth().revokeRefreshTokens(req.user.uid);
+
+   res.clearCookie('session', {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/',            // khớp path đã set
+      // domain: '.your-domain.com', // nếu lúc set có domain, thêm vào đây
+    });
   return res.status(200).json({ message:'Logout successful' });
+  }catch(err){
+    console.error("Error in /logout:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+  
 });
 
 export default router;

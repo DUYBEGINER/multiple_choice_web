@@ -3,8 +3,11 @@ import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
 import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
 import {signInRequest} from '../../api/authAPI'
+import { useNavigate } from "react-router-dom";
 
 function LoginPage(props) {
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -40,9 +43,9 @@ function LoginPage(props) {
     const token = await getTokenSignInWithEmailAndPassword(email, password);
     try{
       const user = await signInRequest(token);
-
       console.log("user after fetch", user);
       if (user) {
+        navigate('/quiz-creator');
         console.log("User logged in successfully:", user);
       } else {
         window.alert("Error logging in user");

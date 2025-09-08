@@ -2,8 +2,9 @@ import axios from 'axios';
 import {axiosClient} from "../utils/axiosClient";
 
 
-const checkSession = async () => {
+const checkSession = async (component) => {
   try {
+    console.log("component call api:", component);
     const res = await axiosClient.get("/auth/me");
     console.log("res check session:", res.data)
     return res.data;
@@ -29,8 +30,10 @@ const signUpRequest = async (idToken, displayName) => {
 };
 
 
-const logOutRequest = async () => {
-  const res = await axiosClient.post(`/auth/logout`);
+const logOutRequest = async (idToken) => {
+  const res = await axiosClient.post(`/auth/logout`, {}, {
+    headers: { Authorization: `Bearer ${idToken}` },
+  });
   console.log("res logout:", res)
   return res.data;
 }

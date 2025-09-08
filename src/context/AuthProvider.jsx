@@ -75,7 +75,7 @@ function AuthProvider({ children }) {
   useEffect(() => {
     async function checkUser() {
       try {
-        const user = await checkSession(); // gọi API backend
+        const user = await checkSession("AuthProvider"); // gọi API backend
         setUser(user);
         if (user) {
           if (
@@ -102,7 +102,7 @@ function AuthProvider({ children }) {
   }, [navigate, location]);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, setUser }}>
       {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );

@@ -1,14 +1,22 @@
-import React , {useCallback} from 'react';
+import React , {useCallback, useContext} from 'react';
 import {SettingOutlined} from "@ant-design/icons";
 import { logOutRequest } from '../../../api/authAPI';
+import { getIdTokenForLogout } from '../../../firebase/auth';
+import { AuthContext } from '../../../context/AuthProvider';
+
 
 function Header(props) {
+
+    // Lấy user và setUser từ context
+    const {setUser } = useContext(AuthContext);
 
 
     const handleLogout = async () => {
       try {
-        await logOutRequest();
+        const idToken = await getIdTokenForLogout();
+        await logOutRequest(idToken);
         console.log("Đăng xuất thành công");
+        setUser(null);
         // Có thể navigate tới trang login
       } catch (error) {
         console.error("Logout error:", error);
