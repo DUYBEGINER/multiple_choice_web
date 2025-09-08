@@ -3,8 +3,11 @@ import {Link} from "react-router-dom";
 import { validateSignup } from '../../utils/validator';
 import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
 import {signUpRequest, signInRequest} from "../../api/authAPI";
+import { useNavigate } from 'react-router-dom';
 
 function SignUpPage(props) {
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -55,6 +58,7 @@ function SignUpPage(props) {
           const user = await signInRequest(token);
 
           if (user) {
+            navigate('/quiz-creator');
             console.log("User signed up successfully:", user);
           } else {
             window.alert("Error signing up user");
