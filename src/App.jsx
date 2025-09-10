@@ -32,7 +32,6 @@ function App() {
 
 
   return (
-    <AuthProvider>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route
@@ -46,7 +45,6 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
         </Routes>
-    </AuthProvider>
   )
 }
 

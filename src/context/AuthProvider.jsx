@@ -11,33 +11,38 @@ function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // null = chưa đăng nhập
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    async function checkUser() {
-      try {
-        const user = await checkSession("AuthProvider"); // gọi API backend
-        setUser(user);
-        if (user) {
-          if (
-            location.pathname === "/login" ||
-            location.pathname === "/signup"
-          ) {
-            navigate("/quiz-creator", { replace: true });
+    if (!user){
+      async function checkUser() {
+        try {
+          const res = await checkSession("AuthProvider"); // gọi API backend
+          console.log("user in auth provider:", res.data);
+          if (res?.data) {
+            setUser(res.data); //Cập nhật user
+            // Nếu đang ở /login hoặc /signup mà đã đăng nhập -> chuyển hướng
+            if (
+              location.pathname === "/login" ||
+              location.pathname === "/signup"
+            ) {
+              navigate("/quiz-creator", { replace: true });
+            }
           }
+      
+        } catch (error) {
+          setUser(null);
+          // Nếu chưa login mà vào trang khác -> bắt về login
+          if (location.pathname !== "/login" && location.pathname !== "/signup") {
+            console.log("Redirecting to login");
+            navigate("/login", { replace: true });
+          }
+        } finally {
+          setLoading(false);
         }
-        // Nếu đang ở /login hoặc /signup mà đã đăng nhập -> chuyển hướng
-      } catch (err) {
-        setUser(null);
-
-        // Nếu chưa login mà vào trang khác -> bắt về login
-        if (location.pathname !== "/login" && location.pathname !== "/signup") {
-          navigate("/login", { replace: true });
-        }
-      } finally {
-        setLoading(false);
       }
-    }
 
-    checkUser();
+      checkUser();
+    }
   }, [navigate, location]);
 
   return (

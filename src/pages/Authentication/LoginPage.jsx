@@ -43,10 +43,9 @@ function LoginPage(props) {
     const token = await getTokenSignInWithEmailAndPassword(email, password);
     try{
       const user = await authRequest(token);
-      console.log("user after fetch", user);
-      if (user) {
+      if (user.data) {
         navigate('/quiz-creator');
-        console.log("User logged in successfully:", user);
+        console.log("User logged in successfully:", user.data);
       } else {
         window.alert("Error logging in user");
       }

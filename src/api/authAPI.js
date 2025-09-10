@@ -4,11 +4,15 @@ import {axiosClient} from "../utils/axiosClient";
 
 const checkSession = async (component) => {
   try {
-    console.log("component call api:", component);
+    // console.log("component call api:", component);
     const res = await axiosClient.get("/auth/me");
-    console.log("res check session:", res.data)
-    return res.data;
+    if (res && res.data) {
+      console.log("Response from checkSession:", res.data);
+      return res.data; // Trả về dữ liệu user
+    }
+    return null;
   } catch (err) {
+    console.error("Error response", err.response);
     return null;
   }
 }
