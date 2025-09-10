@@ -29,7 +29,7 @@ const getCurrentUser = async (req, res) => {
 
 
 
-const signIn = async (req, res) => {
+const handleAuthWithSession = async (req, res) => {
   const user = req.user;
   const idToken = req.idToken;
   console.log("Token in signIn:", idToken);
@@ -112,4 +112,4 @@ const signUp = async (req, res) => {
   }
 };
 
-export { signIn, signUp, getCurrentUser };
+export { handleAuthWithSession, signUp, getCurrentUser };

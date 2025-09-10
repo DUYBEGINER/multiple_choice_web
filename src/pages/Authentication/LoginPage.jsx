@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
 import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
-import {signInRequest} from '../../api/authAPI'
+import {authRequest} from '../../api/authAPI'
 import { useNavigate } from "react-router-dom";
 
 function LoginPage(props) {
@@ -42,7 +42,7 @@ function LoginPage(props) {
     const password = formData.password;
     const token = await getTokenSignInWithEmailAndPassword(email, password);
     try{
-      const user = await signInRequest(token);
+      const user = await authRequest(token);
       console.log("user after fetch", user);
       if (user) {
         navigate('/quiz-creator');

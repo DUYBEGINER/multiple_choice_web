@@ -13,19 +13,11 @@ const checkSession = async (component) => {
   }
 }
 
-const signInRequest = async (idToken) => {
+const authRequest = async (idToken) => {
    const res = await axiosClient.post(`/auth/login`, {}, {
     headers: { Authorization: `Bearer ${idToken}` },
   });
   console.log("res login:" , res.data)
-  return res.data;
-};
-
-const signUpRequest = async (idToken, displayName) => {
-  const res = await axiosClient.post(`/auth/signup`, { displayName }, {
-    headers: { Authorization: `Bearer ${idToken}` },
-  });
-  console.log("res signup:" , res)
   return res.data;
 };
 
@@ -38,4 +30,4 @@ const logOutRequest = async (idToken) => {
   return res.data;
 }
 
-export { signInRequest, signUpRequest, logOutRequest , checkSession};
+export { authRequest, logOutRequest , checkSession};

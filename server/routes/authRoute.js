@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase-admin/auth';
 import express from "express";
 //import function
-import {signIn, signUp, getCurrentUser} from '../controllers/authController.js'
+import {handleAuthWithSession, signUp, getCurrentUser} from '../controllers/authController.js'
 import { authMiddleware, checkSession  } from "../middleware/verifyToken.js";
 
 const router = express.Router()
@@ -22,7 +22,7 @@ router.use(timeLog)
 
 router.get("/me", checkSession , getCurrentUser);
 
-router.post('/login', authMiddleware, signIn);
+router.post('/login', authMiddleware, handleAuthWithSession);
 router.post('/signup', authMiddleware, signUp);
 router.post('/logout', authMiddleware, async (req, res) => {
   try{
