@@ -33,7 +33,6 @@ function AuthProvider({ children }) {
           setUser(null);
           // Nếu chưa login mà vào trang khác -> bắt về login
           if (location.pathname !== "/login" && location.pathname !== "/signup") {
-            console.log("Redirecting to login");
             navigate("/login", { replace: true });
           }
         } finally {
