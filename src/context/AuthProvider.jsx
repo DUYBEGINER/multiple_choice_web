@@ -13,7 +13,6 @@ function AuthProvider({ children }) {
 
 
   useEffect(() => {
-    if (!user){
       async function checkUser() {
         try {
           const res = await checkSession("AuthProvider"); // gọi API backend
@@ -39,9 +38,7 @@ function AuthProvider({ children }) {
           setLoading(false);
         }
       }
-
       checkUser();
-    }
   }, [navigate, location]);
 
   return (

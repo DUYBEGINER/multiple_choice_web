@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
 import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from '../../api/authAPI'
 import { useNavigate } from "react-router-dom";
+import {AuthContext} from '../../context/AuthProvider'
 
 function LoginPage(props) {
 
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -44,6 +46,7 @@ function LoginPage(props) {
     try{
       const user = await authRequest(token);
       if (user.data) {
+        setUser(user.data);
         navigate('/quiz-creator');
         console.log("User logged in successfully:", user.data);
       } else {
