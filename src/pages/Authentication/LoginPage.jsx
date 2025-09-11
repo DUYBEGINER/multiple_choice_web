@@ -30,7 +30,7 @@ function LoginPage(props) {
     messageApi.open({
       key,
       type: status === 'loading' ? 'loading' : status === 'success' ? 'success' : 'error',
-      content: status === 'loading' ? 'Loading...' : status === 'success' ? 'Loaded!' : 'Error!',
+      content: status === 'loading' ? 'Đang xác thực...' : status === 'success' ? 'Đăng nhập thành công!' : 'Lỗi đăng nhập',
       duration: status === 'loading' ? 0 : 2,
     });
   };
