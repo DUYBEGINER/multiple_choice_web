@@ -7,23 +7,15 @@ import { useNavigate } from "react-router-dom";
 import {AuthContext} from '../../context/AuthProvider'
 
 //Antd
-import {
-  BorderBottomOutlined,
-  BorderTopOutlined,
-  RadiusBottomleftOutlined,
-  RadiusBottomrightOutlined,
-  RadiusUpleftOutlined,
-  RadiusUprightOutlined,
-} from '@ant-design/icons';
 
-import { Button, Divider, notification,message, Spin } from 'antd';
+import { message } from 'antd';
 
 function LoginPage(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   
-   const key = "updatable"; // key để update cùng 1 message
+  const key = "updatable"; // key để update cùng 1 message
 
  const openMessage = (status) => {
     message.destroy(key);
@@ -34,8 +26,6 @@ function LoginPage(props) {
       duration: status === 'loading' ? 0 : 2,
     });
   };
-
-
 
 
 

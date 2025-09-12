@@ -4,10 +4,27 @@ import { validateSignup } from '../../utils/validator';
 import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from "../../api/authAPI";
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
+
+
 
 function SignUpPage(props) {
-
+    // Define navigate
     const navigate = useNavigate();
+
+    // Config Antd message
+    const [messageApi, contextHolder] = message.useMessage();
+    const key = "updatable"; // key để update cùng 1 message
+    const openMessage = (status) => {
+        message.destroy(key);
+        messageApi.open({
+          key,
+          type: status === 'loading' ? 'loading' : status === 'success' ? 'success' : 'error',
+          content: status === 'loading' ? 'Đang xác thực...' : status === 'success' ? 'Đăng ký thành công!' : 'Lỗi đăng ký',
+          duration: status === 'loading' ? 0 : 2,
+        });
+      };
+
 
     const [formData, setFormData] = useState({
         email: '',
@@ -32,7 +49,7 @@ function SignUpPage(props) {
         },
         {
           id: "confirmPassword",
-          type: showConfirmPassword ? "text" : "password",
+          type: showConfirmPassword ? "text" : "password",  
           label: "Confirm Password",
           toggle: true,
         },
@@ -49,20 +66,27 @@ function SignUpPage(props) {
       const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorInputs({});
+        openMessage('loading');
         const result = validateSignup(formData);
         if (result.valid) {
-          // Submit form
-          console.log("Form data is valid. Submitting...", formData);
-          const token = await getTokenSignUpWithEmailAndPassword(formData.email, formData.password, formData.displayName);
-
-          const user = await authRequest(token);
-          if (user) {
-            navigate('/quiz-creator');
-            console.log("User signed up successfully:", user);
-          } else {
-            window.alert("Error signing up user");
+          try{
+            // Submit form
+            console.log("Form data is valid. Submitting...", formData);
+            const token = await getTokenSignUpWithEmailAndPassword(formData.email, formData.password, formData.displayName);
+            const user = await authRequest(token);
+            if (user) {
+              openMessage('success');
+              navigate('/quiz-creator');
+              console.log("User signed up successfully:", user);
+            } else {
+              openMessage('error');
+            }
+          }catch(error){
+            console.error("Signup error:", error);
+            openMessage('error');
           }
         } else {
+          openMessage('error');
           // Show errors
           setErrorInputs(result.errors);
         }
@@ -71,91 +95,94 @@ function SignUpPage(props) {
     // console.log("formData", formData);
 
     return (
-      <div className="flex min-h-full h-screen items-center justify-center lg:px-8 bg-blue-violet-900">
-        <div className="flex flex-col justify-center w-2xl p-5 rounded-lg shadow-md bg-white">
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 className="text-2xl text-center font-bold">
-              Đăng kí vào QuizMaker
-            </h2>
-          </div>
-          <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {fields.map((field) => (
-                <div key={field.id}>
-                  <label
-                    htmlFor={field.label}
-                    className="block text-sm/6 font-medium text-gray-500"
-                  >
-                    {field.label}
-                  </label>
-                  <div className="mt-1 relative">
-                    <input
-                      id={field.id}
-                      type={field.type}
-                      name={field.id}
-                      className="w-full block text-base px-2 py-1.5 border border-gray-300 rounded-lg outline-gray-300"
-                      placeholder={field.label}
-                      value={formData[field.id] || ""}
-                      onChange={handleChange}
-                    />
-                  {field.toggle && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          field.id === "password"
-                            ? setShowPassword(!showPassword)
-                            : setShowConfirmPassword(!showConfirmPassword)
-                        }
-                        className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-800 text-sm"
-                      >
-                        {field.id === "password"
-                          ? showPassword
+      <>
+        {contextHolder}
+        <div className="flex min-h-full h-screen items-center justify-center lg:px-8 bg-blue-violet-900">
+          <div className="flex flex-col justify-center w-2xl p-5 rounded-lg shadow-md bg-white">
+            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+              <h2 className="text-2xl text-center font-bold">
+                Đăng kí vào QuizMaker
+              </h2>
+            </div>
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                {fields.map((field) => (
+                  <div key={field.id}>
+                    <label
+                      htmlFor={field.label}
+                      className="block text-sm/6 font-medium text-gray-500"
+                    >
+                      {field.label}
+                    </label>
+                    <div className="mt-1 relative">
+                      <input
+                        id={field.id}
+                        type={field.type}
+                        name={field.id}
+                        className="w-full block text-base px-2 py-1.5 border border-gray-300 rounded-lg outline-gray-300"
+                        placeholder={field.label}
+                        value={formData[field.id] || ""}
+                        onChange={handleChange}
+                      />
+                    {field.toggle && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            field.id === "password"
+                              ? setShowPassword(!showPassword)
+                              : setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-800 text-sm"
+                        >
+                          {field.id === "password"
+                            ? showPassword
+                              ? "Ẩn"
+                              : "Hiện"
+                            : showConfirmPassword
                             ? "Ẩn"
-                            : "Hiện"
-                          : showConfirmPassword
-                          ? "Ẩn"
-                          : "Hiện"}
-                      </button>
-                    )}
-                    </div>
-                      {errorInputs[field.id] && (
-                        <p className="mt-1 text-xs text-red-500">
-                          {errorInputs[field.id]}
-                        </p>
+                            : "Hiện"}
+                        </button>
                       )}
-                </div>
-              ))}
-              <div>
-                <button
-                  type="button"
-                  className="w-full px-3 py-1.5 border border-blue-600 text-blue-500 hover:bg-blue-500 hover:text-white"
-                >
-                  Facebook Login
-                </button>
-              </div>
-              <div>
-                <button
-                  type="submit"
-                  className="flex justify-center bg-indigo-500 text-white px-3 py-1.5 w-full text-sm/6 font-semibold rounded hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                >
-                  Sign up
-                </button>
-              </div>
-              <div className="mt-6">
-                  <p className="text-center text-sm ">
-                  Đã có tài khoản?{" "}
-                  <Link
-                      to="/login"
-                      className="font-semibold text-indigo-500 hover:text-indigo-400"
+                      </div>
+                        {errorInputs[field.id] && (
+                          <p className="mt-1 text-xs text-red-500">
+                            {errorInputs[field.id]}
+                          </p>
+                        )}
+                  </div>
+                ))}
+                <div>
+                  <button
+                    type="button"
+                    className="w-full px-3 py-1.5 border border-blue-600 text-blue-500 hover:bg-blue-500 hover:text-white"
                   >
-                      Đăng nhập ngay
-                  </Link>
-                  </p>
-              </div>
-            </form>
+                    Facebook Login
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="flex justify-center bg-indigo-500 text-white px-3 py-1.5 w-full text-sm/6 font-semibold rounded hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  >
+                    Sign up
+                  </button>
+                </div>
+                <div className="mt-6">
+                    <p className="text-center text-sm ">
+                    Đã có tài khoản?{" "}
+                    <Link
+                        to="/login"
+                        className="font-semibold text-indigo-500 hover:text-indigo-400"
+                    >
+                        Đăng nhập ngay
+                    </Link>
+                    </p>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-    </div>
+      </div>
+    </>
     );
 }
 
