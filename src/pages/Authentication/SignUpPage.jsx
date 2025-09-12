@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Link} from "react-router-dom";
 import { validateSignup } from '../../utils/validator';
 import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from "../../api/authAPI";
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
-
+import {AuthContext} from '@/context/AuthProvider'
 
 
 function SignUpPage(props) {
@@ -25,6 +25,8 @@ function SignUpPage(props) {
         });
       };
 
+      //Call set User from AuthContext
+      const { setUser } = useContext(AuthContext);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -75,6 +77,7 @@ function SignUpPage(props) {
             const token = await getTokenSignUpWithEmailAndPassword(formData.email, formData.password, formData.displayName);
             const user = await authRequest(token);
             if (user) {
+              setUser(user.data);
               openMessage('success');
               navigate('/quiz-creator');
               console.log("User signed up successfully:", user);
