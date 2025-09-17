@@ -1,6 +1,8 @@
-import { getPool } from "../db/config.js";
+import { getAuth } from 'firebase-admin/auth';
 import { createAndSetSessionCookie } from "../services/createSessionCookie.js";
 import { getUserByUid, createUser } from "../repositories/userRepository.js";
+
+
 
 // server/controllers/userController.js
 const getCurrentUser = async (req, res) => {
@@ -60,6 +62,23 @@ const handleAuthWithSession = async (req, res) => {
   }
 }
 
+const logOut = async (req, res) => {
+  try{
+    console.log("Logging out user:", req.user);
+    await getAuth().revokeRefreshTokens(req.user.uid);
+
+   res.clearCookie('session', {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/',            // khớp path đã set
+      // domain: '.your-domain.com', // nếu lúc set có domain, thêm vào đây
+    });
+  return res.status(200).json({ message:'Logout successful' });
+  }catch(err){
+    console.error("Error in /logout:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 const signUp = async (req, res) => {
   const { uid, email } = req.user;
@@ -88,4 +107,4 @@ const signUp = async (req, res) => {
   }
 };
 
-export { handleAuthWithSession, signUp, getCurrentUser };
+export { handleAuthWithSession, signUp, getCurrentUser, logOut };
