@@ -20,8 +20,8 @@ const timeLog = (req, res, next) => {
 
 router.use(timeLog)
 
+//Auth routes
 router.get("/me", checkSession , getCurrentUser);
-
 router.post('/login', authMiddleware, handleAuthWithSession);
 router.post('/signup', authMiddleware, signUp);
 router.post('/logout', authMiddleware, async (req, res) => {
@@ -40,7 +40,6 @@ router.post('/logout', authMiddleware, async (req, res) => {
     console.error("Error in /logout:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
-  
 });
 
 export default router;

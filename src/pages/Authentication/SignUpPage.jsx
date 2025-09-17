@@ -14,9 +14,12 @@ function SignUpPage(props) {
 
     // Config Antd message
     const [messageApi, contextHolder] = message.useMessage();
-    const key = "updatable"; // key để update cùng 1 message
-    const openMessage = (status) => {
-        message.destroy(key);
+
+    const key = "signup-message"; // key để update cùng 1 message
+    //Call set User from AuthContext
+    const { setUser } = useContext(AuthContext);
+    
+    const openMessage = (status, message) => {
         messageApi.open({
           key,
           type: status === 'loading' ? 'loading' : status === 'success' ? 'success' : 'error',
@@ -24,9 +27,6 @@ function SignUpPage(props) {
           duration: status === 'loading' ? 0 : 2,
         });
       };
-
-      //Call set User from AuthContext
-      const { setUser } = useContext(AuthContext);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -68,9 +68,10 @@ function SignUpPage(props) {
       const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorInputs({});
-        openMessage('loading');
+       
         const result = validateSignup(formData);
         if (result.valid) {
+          openMessage('loading');
           try{
             // Submit form
             console.log("Form data is valid. Submitting...", formData);

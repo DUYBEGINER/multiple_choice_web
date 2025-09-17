@@ -1,5 +1,6 @@
 import { getPool } from "../db/config.js";
 import { createAndSetSessionCookie } from "../services/createSessionCookie.js";
+import { getUserByUid, createUser } from "../repositories/userRepository.js";
 
 // server/controllers/userController.js
 const getCurrentUser = async (req, res) => {
@@ -8,17 +9,16 @@ const getCurrentUser = async (req, res) => {
       return res.status(401).json({ message: "Not authenticated" });
     }
   try {
-    const pool = await getPool();
-    const result = await pool.request()
-      .input('uid', user.uid)
-      .query('SELECT * FROM users WHERE uid = @uid;');
-
-
-    console.log("[auth controller] Current user auth:", result.recordset[0]);
+    const userRecord = await getUserByUid(user.uid);
+    if (!userRecord) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    console.log("[auth controller] Current user auth:", userRecord);
 
     return res.status(200).json({
       message: 'Login successful',
-      data: result.recordset[0],
+      data: userRecord,
     });
 
   } catch (err) {
@@ -28,7 +28,6 @@ const getCurrentUser = async (req, res) => {
 };
 
 
-
 const handleAuthWithSession = async (req, res) => {
   const user = req.user;
   const idToken = req.idToken;
@@ -36,25 +35,10 @@ const handleAuthWithSession = async (req, res) => {
   console.log("Logging in user:", user);
 
   try {
-    const pool = await getPool();
-    const result = await pool.request()
-      .input('uid', user.uid)
-      .query('SELECT * FROM users WHERE uid = @uid;');
-    var userRecord;
+    let userRecord = await getUserByUid(user.uid);
 
-    if (result.recordset.length === 0) {
-      await pool.request()
-        .input('uid', user.uid)
-        .input('email', user.email)
-        .input('displayName', user.displayName)
-        .query('INSERT INTO users (uid, email, displayName) VALUES (@uid, @email, @displayName);');
-
-      const newUser = await pool.request()
-          .input('uid', user.uid)
-          .query('SELECT * FROM users WHERE uid = @uid;');
-        userRecord = newUser.recordset[0];
-    }else{
-        userRecord = result.recordset[0];
+    if (!userRecord) {
+      userRecord = await createUser(user.uid, user.email, user.displayName);
     }
 
     const {sessionCookie, expiresIn} = await createAndSetSessionCookie(idToken);
@@ -66,7 +50,6 @@ const handleAuthWithSession = async (req, res) => {
       path: "/",
     });
     
-
     return res.status(200).json({
       message: 'Login successful',
       data: userRecord,
@@ -85,30 +68,23 @@ const signUp = async (req, res) => {
   console.log("Token in signUp:", idToken);
   console.log("user sign up:", req.user)
   try {
-    const pool = await getPool();
-    const existing = await pool.request()
-      .input('uid', uid)
-      .query('SELECT * FROM users WHERE uid = @uid;');
+    const existingUser = await getUserByUid(uid);
 
-    if (existing.recordset.length > 0) {
+    if (existingUser) {
       return res.status(409).json({ message: 'User already exists' });
     }
 
-    await pool.request()
-      .input('uid', uid)
-      .input('email', email)
-      .input('displayName', displayName)
-      .query('INSERT INTO users (uid, email, displayName) VALUES (@uid, @email, @displayName);');
+    const newUser = await createUser(uid, email, displayName);
 
     await createAndSetSessionCookie(res, idToken);
 
     return res.status(201).json({
-      message: 'User signed up successfully',
-      user: { uid, email, displayName }
+      message: "User signed up successfully",
+      user: newUser,
     });
   } catch (error) {
-    console.error('Error signing up user:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error signing up user:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
