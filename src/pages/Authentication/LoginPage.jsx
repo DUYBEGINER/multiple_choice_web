@@ -125,8 +125,7 @@ function LoginPage(props) {
                       placeholder={field.label}
                     />
                     {field.toggle && (
-                      <button
-                        type="button"
+                      <span
                         onClick={() =>
                           field.id === "password"
                             ? setShowPassword(!showPassword)
@@ -135,9 +134,14 @@ function LoginPage(props) {
                         className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-800 text-sm"
                       >
                         {field.id === "password" ? showPassword ? "Ẩn" : "Hiện" : ""}
-                      </button>
+                      </span>
                     )}
                   </div>
+                  {field.id === "password" && (
+                    <a href="#" className="mt-2 mb-3 inline-block text-right text-xs font-semibold text-indigo-600 hover:text-indigo-500 float-right">
+                      Quên mật khẩu?
+                    </a>
+                  )}
                 </div>
               ))}
               <div>

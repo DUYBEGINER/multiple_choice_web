@@ -6,7 +6,7 @@ import {authRequest} from "../../api/authAPI";
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import {AuthContext} from '@/context/AuthProvider'
-
+import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 function SignUpPage(props) {
     // Define navigate
@@ -129,30 +129,31 @@ function SignUpPage(props) {
                         onChange={handleChange}
                       />
                     {field.toggle && (
-                        <button
+                        <span
                           type="button"
                           onClick={() =>
                             field.id === "password"
                               ? setShowPassword(!showPassword)
                               : setShowConfirmPassword(!showConfirmPassword)
                           }
-                          className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-800 text-sm"
+                          className="absolute inset-y-0 right-3 flex items-center text-gray-600 hover:text-gray-800 text-sm cursor-pointer"
                         >
                           {field.id === "password"
                             ? showPassword
-                              ? "Ẩn"
-                              : "Hiện"
+                              ? <EyeOutlined />
+                              : <EyeInvisibleOutlined />
                             : showConfirmPassword
-                            ? "Ẩn"
-                            : "Hiện"}
-                        </button>
+                            ? <EyeOutlined />
+                            : <EyeInvisibleOutlined />}
+                        </span>
                       )}
+
                       </div>
-                        {errorInputs[field.id] && (
-                          <p className="mt-1 text-xs text-red-500">
-                            {errorInputs[field.id]}
-                          </p>
-                        )}
+                      {errorInputs[field.id] && (
+                        <p className="mt-1 text-xs text-red-500">
+                          {errorInputs[field.id]}
+                        </p>
+                      )}
                   </div>
                 ))}
                 <div>
