@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import { sendEmailResetPassword } from '../../firebase/auth';
 
-function SetNewPassword.jsx() {
+function SetNewPassword() {
     const [email, setEmail] = useState("");
 
     const handleChange = (e) => {
@@ -21,4 +21,4 @@ function SetNewPassword.jsx() {
     );
 }
 
-export default SetNewPassword.jsx;
+export default SetNewPassword;

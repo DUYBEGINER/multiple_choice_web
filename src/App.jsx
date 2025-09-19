@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import CreateQuizPage from '@/pages/quizCreator/CreateQuizPage';
 import LoginPage from '@/pages/Authentication/LoginPage';
 import SignUpPage from '@/pages/Authentication/SignUpPage';
+import SetNewPassword from '@/pages/Authentication/SetNewPassword';
 import ForgotPassWord from './pages/Authentication/ForgotPassWord';
 import AuthLayout from './pages/Authentication/AuthLayout';
 import AuthProvider from './context/AuthProvider';
@@ -37,6 +38,7 @@ function App() {
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/signup" element={<SignUpPage />} />
             <Route path="/auth/forgot-password" element={<ForgotPassWord />} />
+            <Route path="/auth/reset-password" element={<SetNewPassword />} />
           </Route>
         </Routes>
   )
