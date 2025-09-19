@@ -1,4 +1,4 @@
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword , signOut, updateProfile} from "firebase/auth";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword , signOut, updateProfile, sendPasswordResetEmail} from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import { getAuth } from "firebase/auth";
 
@@ -46,14 +46,16 @@ export const getIdTokenForLogout = async () => {
 
 
 //Verify email  when sign up
-export const sendEmailVerification = async () => {
-  if (auth.currentUser) {
-    try {
-      await auth.currentUser.sendEmailVerification();
-      console.log("Email verification sent");
-    } catch (error) {
-      console.error("Error sending email verification:", error);
-      throw error;
-    }
-  }
+export const sendEmailResetPassword = async (email) => {
+  sendPasswordResetEmail(auth, email, {url: "http://localhost:5173/auth/login"})
+  .then(() => {
+    // Password reset email sent!
+    // ..
+    window.alert("Đã gửi email đặt lại mật khẩu! Vui lòng kiểm tra hộp thư đến của bạn.");
+  })
+  .catch((error) => {
+    const errorMessage = error.message;
+    window.alert("Lỗi khi gửi email đặt lại mật khẩu: " + errorMessage);
+    // ..
+  });
 }
