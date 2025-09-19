@@ -101,8 +101,6 @@ function SignUpPage(props) {
     return (
       <>
         {contextHolder}
-        <div className="flex min-h-full h-screen items-center justify-center lg:px-8 bg-blue-violet-900">
-          <div className="flex flex-col justify-center w-2xl p-5 rounded-lg shadow-md bg-white">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
               <h2 className="text-2xl text-center font-bold">
                 Đăng kí vào QuizMaker
@@ -176,7 +174,7 @@ function SignUpPage(props) {
                     <p className="text-center text-sm ">
                     Đã có tài khoản?{" "}
                     <Link
-                        to="/login"
+                        to="/auth/login"
                         className="font-semibold text-indigo-500 hover:text-indigo-400"
                     >
                         Đăng nhập ngay
@@ -185,8 +183,6 @@ function SignUpPage(props) {
                 </div>
               </form>
             </div>
-          </div>
-      </div>
     </>
     );
 }

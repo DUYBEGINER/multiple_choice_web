@@ -11,6 +11,7 @@ function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // null = chưa đăng nhập
   const [loading, setLoading] = useState(true);
 
+  const pagesAllow = ["/auth/login", "/auth/signup", "/auth/forgot-password"];
 
   useEffect(() => {
       async function checkUser() {
@@ -21,8 +22,8 @@ function AuthProvider({ children }) {
             setUser(res.data); //Cập nhật user
             // Nếu đang ở /login hoặc /signup mà đã đăng nhập -> chuyển hướng
             if (
-              location.pathname === "/login" ||
-              location.pathname === "/signup"
+              location.pathname === "/auth/login" ||
+              location.pathname === "/auth/signup"
             ) {
               navigate("/quiz-creator", { replace: true });
             }
@@ -31,8 +32,8 @@ function AuthProvider({ children }) {
         } catch (error) {
           setUser(null);
           // Nếu chưa login mà vào trang khác -> bắt về login
-          if (location.pathname !== "/login" && location.pathname !== "/signup") {
-            navigate("/login", { replace: true });
+          if (!pagesAllow.includes(location.pathname)) {
+            navigate("/auth/login", { replace: true });
           }
         } finally {
           setLoading(false);

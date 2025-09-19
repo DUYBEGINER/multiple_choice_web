@@ -43,3 +43,17 @@ export const getIdTokenForLogout = async () => {
   // true = force refresh (đảm bảo còn hạn)
   return await auth.currentUser.getIdToken(true);
 }
+
+
+//Verify email  when sign up
+export const sendEmailVerification = async () => {
+  if (auth.currentUser) {
+    try {
+      await auth.currentUser.sendEmailVerification();
+      console.log("Email verification sent");
+    } catch (error) {
+      console.error("Error sending email verification:", error);
+      throw error;
+    }
+  }
+}
