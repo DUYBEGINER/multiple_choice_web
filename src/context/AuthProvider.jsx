@@ -11,7 +11,7 @@ function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // null = chưa đăng nhập
   const [loading, setLoading] = useState(true);
 
-  const pagesAllow = ["/auth/login", "/auth/signup", "/auth/forgot-password"];
+  const pagesAllow = ["/auth/login", "/auth/signup", "/auth/forgot-password", "/auth/reset-password"];
 
   useEffect(() => {
       async function checkUser() {
