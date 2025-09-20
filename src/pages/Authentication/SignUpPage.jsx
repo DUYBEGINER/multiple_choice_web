@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 import {Link} from "react-router-dom";
-import { validateSignup } from '../../utils/validator';
+import { validateSignup } from '../../utils/validatorInput';
 import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from "../../api/authAPI";
 import { useNavigate } from 'react-router-dom';
