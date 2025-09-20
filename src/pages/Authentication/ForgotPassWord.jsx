@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { sendEmailResetPassword } from '../../firebase/auth';
 
 function ForgotPassWord() {
     const [email, setEmail] = useState("");
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setEmail(e.target.value);
@@ -11,8 +12,18 @@ function ForgotPassWord() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await sendEmailResetPassword(email);
+        if(!email) {
+            alert("Vui lòng nhập email");
+            return;
+        };
+        try{
+            await sendEmailResetPassword(email);
+            navigate('/auth/email-confirmation', {state: {email}}, {replace: true});
+        }catch(error){
+            console.error("Error sending email:", error.code);
+        }
     }
+
 
     return (
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">

@@ -8,9 +8,9 @@ import SignUpPage from '@/pages/Authentication/SignUpPage';
 import SetNewPassword from '@/pages/Authentication/SetNewPassword';
 import ForgotPassWord from './pages/Authentication/ForgotPassWord';
 import AuthLayout from './pages/Authentication/AuthLayout';
-import AuthProvider from './context/AuthProvider';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthProvider';
+import EmailConfirmation from './pages/Authentication/EmailConfirmation';
 
 function App() {
 
@@ -39,6 +39,7 @@ function App() {
             <Route path="/auth/signup" element={<SignUpPage />} />
             <Route path="/auth/forgot-password" element={<ForgotPassWord />} />
             <Route path="/auth/reset-password" element={<SetNewPassword />} />
+            <Route path="/auth/email-confirmation" element={<EmailConfirmation />} />
           </Route>
         </Routes>
   )
