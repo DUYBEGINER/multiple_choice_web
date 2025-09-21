@@ -18,9 +18,12 @@ function ForgotPassWord() {
         };
         try{
             await sendEmailResetPassword(email);
-            navigate('/auth/email-confirmation', {state: {email}}, {replace: true});
+            navigate('/auth/email-confirmation', {
+                replace: true,
+                state: { email },
+            });
         }catch(error){
-            console.error("Error sending email:", error.code);
+            console.error("Error sending email:", error.message);
         }
     }
 

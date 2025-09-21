@@ -1,7 +1,7 @@
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword , signOut, updateProfile, sendPasswordResetEmail} from "firebase/auth";
 import { auth } from "./firebaseConfig";
-import { getAuth } from "firebase/auth";
-
+import { getAuth, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
+import {} from "firebase/auth";
 //Get token login 
 export const getTokenSignInWithEmailAndPassword = async (email, password) => {
   try {
@@ -45,9 +45,9 @@ export const getIdTokenForLogout = async () => {
 }
 
 
-//Verify email  when sign up
+//Send email to reset password
 export const sendEmailResetPassword = async (email) => {
-  sendPasswordResetEmail(auth, email, {url: "http://localhost:5173/auth/login"})
+  sendPasswordResetEmail(auth, email)
   .then(() => {
     // Password reset email sent!
     // ..
@@ -58,4 +58,38 @@ export const sendEmailResetPassword = async (email) => {
     window.alert("Lỗi khi gửi email đặt lại mật khẩu: " + errorMessage);
     // ..
   });
+}
+ 
+//Confrim password reset with oobCode and new password
+export const confirmPasswordResetWithCode = async (oobCode, newPassword) => {
+  // Xác nhận mã oobCode và đặt lại mật khẩu
+  try {
+    // 1. Xác minh mã (oobCode)
+    const email = await verifyPasswordResetCode(auth, oobCode);
+    console.log("Email associated with the reset code:", email);
+     // 2. Xác nhận đặt lại mật khẩu với mật khẩu mới
+    await confirmPasswordReset(auth, oobCode, newPassword);
+
+  } catch (error) {
+    let errorMessage = "Đã xảy ra lỗi khi đặt lại mật khẩu.";
+    switch (error.code) {
+            case 'auth/invalid-action-code':
+                errorMessage = "Mã xác minh không hợp lệ hoặc đã hết hạn.";
+                break;
+            case 'auth/user-disabled':
+                errorMessage = "Tài khoản người dùng đã bị vô hiệu hóa.";
+                break;
+            case 'auth/user-not-found':
+                errorMessage = "Người dùng không tồn tại.";
+                break;
+            case 'auth/weak-password':
+                errorMessage = "Mật khẩu quá yếu. Vui lòng chọn mật khẩu mạnh hơn.";
+                break;
+            // Thêm các trường hợp khác nếu cần
+            default:
+                break;
+        }
+
+    throw new Error(errorMessage);
+  }
 }

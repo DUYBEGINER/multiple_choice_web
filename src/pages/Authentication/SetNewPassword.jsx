@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
-import { auth } from '../../firebase/firebaseConfig';
-import { verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
+import {confirmPasswordResetWithCode } from '../../firebase/auth';
+
 
 function SetNewPassword() {
     const [searchParams] = useSearchParams();
@@ -29,18 +29,12 @@ function SetNewPassword() {
             alert("Mật khẩu không khớp");
             return;
         }
-        verifyPasswordResetCode(auth, oobCode).then(() => {
-            confirmPasswordReset(auth, oobCode, form.password).then(() => {
-                // Password reset successful
-                alert("Đặt lại mật khẩu thành công");
-            }).catch((error) => {
-                // Handle error
-                console.error("Error resetting password:", error);
-            });
-        }).catch((error) => {
-            // Handle error
-            console.error("Error verifying password reset code:", error);
-        });
+        try{
+            await confirmPasswordResetWithCode(oobCode, form.password);
+            alert("Đặt lại mật khẩu thành công! Vui lòng đăng nhập lại.");
+        }catch(error){
+            alert("Lỗi khi đặt lại mật khẩu: " + error.message);
+        }
     }
 
     return (
