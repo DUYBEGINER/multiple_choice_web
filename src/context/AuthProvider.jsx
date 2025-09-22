@@ -21,20 +21,20 @@ function AuthProvider({ children }) {
           if (res?.data) {
             setUser(res.data); //Cập nhật user
             // Nếu đang ở /login hoặc /signup mà đã đăng nhập -> chuyển hướng
-            if (
-              location.pathname === "/auth/login" ||
-              location.pathname === "/auth/signup"
-            ) {
-              navigate("/quiz-creator", { replace: true });
-            }
+            // if (
+            //   location.pathname === "/auth/login" ||
+            //   location.pathname === "/auth/signup"
+            // ) {
+            //   navigate("/quiz-creator", { replace: true });
+            // }
           }
       
         } catch (error) {
           setUser(null);
           // Nếu chưa login mà vào trang khác -> bắt về login
-          if (!pagesAllow.includes(location.pathname)) {
-            navigate("/auth/login", { replace: true });
-          }
+          // if (!pagesAllow.includes(location.pathname)) {
+          //   navigate("/auth/login", { replace: true });
+          // }
         } finally {
           setLoading(false);
         }
