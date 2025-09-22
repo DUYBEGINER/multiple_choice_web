@@ -63,10 +63,10 @@ function LoginPage(props) {
     e.preventDefault();
     const email = formData.email;
     const password = formData.password;
-    // if (!email || !password) {
-    //   window.alert("Please fill in all fields");
-    //   return;
-    // }
+    if (!email || !password) {
+      window.alert("Please fill in all fields");
+      return;
+    }
 
     setLoading(true);
     openMessage('loading');
