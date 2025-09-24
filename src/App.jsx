@@ -12,6 +12,8 @@ import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthProvider';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
 
+
+
 function App() {
 
   const { loading } = useContext(AuthContext);
