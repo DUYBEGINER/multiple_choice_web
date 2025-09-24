@@ -11,8 +11,7 @@ import AuthLayout from './pages/Authentication/AuthLayout';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthProvider';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
-
-
+import { PATHS } from './data/routePaths';
 
 function App() {
 
@@ -26,7 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route
-            path="/quiz-creator"
+            path={PATHS.QUIZ}
             element={
               <PrivateRoute>
                 <CreateQuizPage />
@@ -36,12 +35,12 @@ function App() {
           {/* <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPassWord />} /> */}
-          <Route path="/auth" element={<AuthLayout />}>
-            <Route path="/auth/login" element={<LoginPage />} />
-            <Route path="/auth/signup" element={<SignUpPage />} />
-            <Route path="/auth/forgot-password" element={<ForgotPassWord />} />
-            <Route path="/auth/reset-password" element={<SetNewPassword />} />
-            <Route path="/auth/email-confirmation" element={<EmailConfirmation />} />
+          <Route path={PATHS.AUTH.ROOT} element={<AuthLayout />}>
+            <Route path={PATHS.AUTH_CHILD.LOGIN} element={<LoginPage />} />
+            <Route path={PATHS.AUTH_CHILD.SIGNUP} element={<SignUpPage />} />
+            <Route path={PATHS.AUTH_CHILD.FORGOTPASSWORD} element={<ForgotPassWord />} />
+            <Route path={PATHS.AUTH_CHILD.RESET} element={<SetNewPassword />} />
+            <Route path={PATHS.AUTH_CHILD.EMAIL_CONFIRM} element={<EmailConfirmation />} />
           </Route>
         </Routes>
   )

@@ -6,7 +6,7 @@ import {authRequest} from '../../api/authAPI'
 import { useNavigate } from "react-router-dom";
 import {AuthContext} from '../../context/AuthProvider'
 
-//Antd
+import {PATHS} from '../../data/routePaths'
 
 import { message } from 'antd';
 
@@ -136,7 +136,7 @@ function LoginPage(props) {
                   )}
                 </div>
                 {field.id === "password" && (
-                  <Link to="/auth/forgot-password" className="mt-2 mb-3 inline-block text-right text-xs font-semibold text-indigo-600 hover:text-indigo-500 float-right">
+                  <Link to={PATHS.AUTH.FORGOTPASSWORD} className="mt-2 mb-3 inline-block text-right text-xs font-semibold text-indigo-600 hover:text-indigo-500 float-right">
                     Quên mật khẩu?
                   </Link>
                 )}
@@ -162,7 +162,7 @@ function LoginPage(props) {
                 <p className="text-center text-sm ">
                 Chưa có tài khoản?{" "}
                 <Link
-                    to="/auth/signup"
+                    to={PATHS.AUTH.SIGNUP}
                     className="font-semibold text-indigo-500 hover:text-indigo-400"
                 >
                     Đăng ký

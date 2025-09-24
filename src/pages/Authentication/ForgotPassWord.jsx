@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import { sendEmailResetPassword } from '../../firebase/auth';
+import {PATHS} from '../../data/routePaths'
 
 function ForgotPassWord() {
     const [email, setEmail] = useState("");
@@ -40,7 +41,7 @@ function ForgotPassWord() {
                 </form>
             </div>
             <div className="mt-4 text-center">
-                <Link to="/auth/login" className="text-blue-500 hover:underline">Quay lại đăng nhập</Link>
+                <Link to={PATHS.AUTH.LOGIN} className="text-blue-500 hover:underline">Quay lại đăng nhập</Link>
             </div>
         </div>
     );

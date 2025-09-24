@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import {AuthContext} from '@/context/AuthProvider'
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import {PATHS} from '../../data/routePaths'
+
 
 function SignUpPage(props) {
     // Define navigate
@@ -174,7 +176,7 @@ function SignUpPage(props) {
                     <p className="text-center text-sm ">
                     Đã có tài khoản?{" "}
                     <Link
-                        to="/auth/login"
+                        to={PATHS.AUTH.LOGIN}
                         className="font-semibold text-indigo-500 hover:text-indigo-400"
                     >
                         Đăng nhập ngay

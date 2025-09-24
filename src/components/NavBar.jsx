@@ -50,13 +50,13 @@ export default function NavBar() {
             {/* Nút Đăng nhập & Đăng ký */}
           <div className="flex items-center gap-3 px-6 py-3">
             <Link
-              to={PATHS.LOGIN}
+              to={PATHS.AUTH.LOGIN}
               className="px-4 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#2b3037] transition"
             >
               Đăng nhập
             </Link>
             <Link
-              to={PATHS.SIGNUP}
+              to={PATHS.AUTH.SIGNUP}
               className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
             >
               Đăng ký
