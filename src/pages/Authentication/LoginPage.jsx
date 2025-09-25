@@ -9,26 +9,18 @@ import {AuthContext} from '../../context/AuthProvider'
 import {PATHS} from '../../data/routePaths'
 
 import { message } from 'antd';
+import {openMessage} from '../../utils/messageUtils'
+
 
 function LoginPage(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Config Antd message
   const [messageApi, contextHolder] = message.useMessage();
-  
   const key = "updatable"; // key để update cùng 1 message
 
- const openMessage = (status) => {
-    message.destroy(key);
-    messageApi.open({
-      key,
-      type: status === 'loading' ? 'loading' : status === 'success' ? 'success' : 'error',
-      content: status === 'loading' ? 'Đang xác thực...' : status === 'success' ? 'Đăng nhập thành công!' : 'Lỗi đăng nhập',
-      duration: status === 'loading' ? 0 : 2,
-    });
-  };
-
-
-
+  // Define navigate
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
 
@@ -58,38 +50,42 @@ function LoginPage(props) {
       toggle: true,
     },
   ];
+
   console.log("login render")
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = formData.email;
-    const password = formData.password;
+    const { email, password } = formData;
+
+
     if (!email || !password) {
-      window.alert("Please fill in all fields");
+      openMessage('warning', 'Vui lòng nhập đủ Email và Mật khẩu', null, message, messageApi, key);
       return;
     }
 
+
     setLoading(true);
-    openMessage('loading');
+    openMessage('loading', 'Đang xác thực...', null, message, messageApi, key);
+
+    
     // Get token from Firebase
     try{
       const token = await getTokenSignInWithEmailAndPassword(email, password);
       const user = await authRequest(token);
       console.log("User data from authRequest:", user);
-      if (user.data) {
-        setUser(user.data);
-        setLoading(false);
-        openMessage('success');
-        navigate('/quiz-creator');
-        console.log("User logged in successfully:", user.data);
-      } else {
-        window.alert("Error logging in user");
-        setLoading(false);
-      }
+
+      if (!user?.data) throw new Error('Không lấy được thông tin người dùng');
+      
+      setUser(user.data);
+      openMessage('success', 'Đăng nhập thành công!', null, message, messageApi, key);
+      navigate('/quiz-creator');
+      console.log("User logged in successfully:", user.data);
+     
     }catch(error){
       console.error("Login error:", error);
       setSuccess(false);
-      setLoading(false);
-      openMessage('error');
+      openMessage('error', 'Lỗi đăng nhập', null, message, messageApi, key);
     }finally{
       setLoading(false);
     }
