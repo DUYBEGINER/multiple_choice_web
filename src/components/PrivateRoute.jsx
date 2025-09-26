@@ -13,7 +13,7 @@ export default function PrivateRoute({ children }) {
 }
 
 // AuthRoute cho các route chỉ dành cho chưa login (như login/signup)
-function AuthRoute({ children }) {
+export function AuthRoute({ children }) {
   const { user, loading } = useContext(AuthContext);
   if (loading) return <div>Loading...</div>;
   if (user) return <Navigate to="/quiz-creator" replace />;

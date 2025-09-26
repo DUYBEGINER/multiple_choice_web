@@ -1,12 +1,18 @@
 import React, {useState, useContext} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate , Navigate  } from 'react-router-dom';
+
 import { validateSignup } from '../../utils/validatorInput';
-import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
-import {authRequest} from "../../api/authAPI";
-import { useNavigate } from 'react-router-dom';
-import { message } from 'antd';
+import { openMessage } from '../../utils/messageUtils';
+
 import {AuthContext} from '@/context/AuthProvider'
+
+import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
+
+import {authRequest} from "../../api/authAPI";
+
+import { message } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+
 import {PATHS} from '../../data/routePaths'
 
 
@@ -21,14 +27,7 @@ function SignUpPage(props) {
     //Call set User from AuthContext
     const { setUser } = useContext(AuthContext);
     
-    const openMessage = (status, message) => {
-        messageApi.open({
-          key,
-          type: status === 'loading' ? 'loading' : status === 'success' ? 'success' : 'error',
-          content: status === 'loading' ? 'Đang xác thực...' : status === 'success' ? 'Đăng ký thành công!' : 'Lỗi đăng ký',
-          duration: status === 'loading' ? 0 : 2,
-        });
-      };
+
 
     const [formData, setFormData] = useState({
         email: '',
@@ -73,7 +72,7 @@ function SignUpPage(props) {
        
         const result = validateSignup(formData);
         if (result.valid) {
-          openMessage('loading');
+          openMessage('loading', 'Đang xử lí', null, message, messageApi, key);
           try{
             // Submit form
             console.log("Form data is valid. Submitting...", formData);
@@ -81,18 +80,18 @@ function SignUpPage(props) {
             const user = await authRequest(token);
             if (user) {
               setUser(user.data);
-              openMessage('success');
+              openMessage('success', 'Đăng ký thành công', null, message, messageApi, key);
               navigate('/quiz-creator');
               console.log("User signed up successfully:", user);
             } else {
-              openMessage('error');
+              openMessage('error', 'Đăng ký thất bại', null, message, messageApi, key);
             }
           }catch(error){
             console.error("Signup error:", error);
-            openMessage('error');
+            openMessage('error', error.message, null, message, messageApi, key);
           }
         } else {
-          openMessage('error');
+          openMessage('error', 'Đăng ký thất bại', null, message, messageApi, key);
           // Show errors
           setErrorInputs(result.errors);
         }
@@ -175,6 +174,7 @@ function SignUpPage(props) {
                 <div className="mt-6">
                     <p className="text-center text-sm ">
                     Đã có tài khoản?{" "}
+                    {/* <Navigate to={PATHS.AUTH.LOGIN} replace={true} /> */}
                     <Link
                         to={PATHS.AUTH.LOGIN}
                         className="font-semibold text-indigo-500 hover:text-indigo-400"
