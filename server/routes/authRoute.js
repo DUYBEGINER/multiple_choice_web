@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase-admin/auth';
 import express from "express";
 //import function
-import {handleAuthWithSession, signUp, getCurrentUser, logOut} from '../controllers/authController.js'
+import {handleAuthWithSession, getCurrentUser, logOut} from '../controllers/authController.js'
 import { authMiddleware, checkSession  } from "../middleware/verifyToken.js";
 
 const router = express.Router()

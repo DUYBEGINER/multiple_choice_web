@@ -105,6 +105,10 @@ function LoginPage(props) {
     }
   }
 
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword(prev => !prev);
+  }, []);
+
   return (
     <>
       {contextHolder}
@@ -135,11 +139,7 @@ function LoginPage(props) {
                   />
                   {field.toggle && (
                     <span
-                      onClick={() =>
-                        field.id === "password"
-                          ? setShowPassword(!showPassword)
-                          : null
-                      }
+                      onClick={togglePasswordVisibility}
                       className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-800 text-sm"
                     >
                       {field.id === "password" ? showPassword ? "Ẩn" : "Hiện" : ""}

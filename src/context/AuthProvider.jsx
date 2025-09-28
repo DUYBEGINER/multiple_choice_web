@@ -26,6 +26,7 @@ function AuthProvider({ children }) {
 
     try{
       const response = await checkSession("AuthProvider");
+      console.log("API Response:", response);
       if (!isMountedRef.current) return;
 
       if(response?.success && response?.data){
@@ -33,6 +34,7 @@ function AuthProvider({ children }) {
         setError(null);
         console.log("User session valid:", response.data);
       }else{
+        console.log("No valid user session"); 
         setUser(null);
         setError(null);
       }
@@ -55,6 +57,7 @@ function AuthProvider({ children }) {
         setError(error.message);
     } finally {
       if (isMountedRef.current) {
+        console.log("Setting loading to false"); // Thêm log này
         setLoading(false);
       }
     }

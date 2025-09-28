@@ -3,60 +3,91 @@ import { getAuth } from "firebase-admin/auth";
 
 
 const checkSession = async (req, res, next) => {
-
-  const sessionCookie = req.cookies.session;
-  if(!sessionCookie) return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
   try {
+    const sessionCookie = req.cookies.session;
+    if (!sessionCookie) {
+      return res.status(401).json({
+        success: false,
+        message: 'No sesstion cookie found'
+      });
+    }
+
     const decodedClaims = await getAuth().verifySessionCookie(sessionCookie, true);
     console.log("[auth middleware] USE SESSION COOKIE:", decodedClaims);
 
-    if(!decodedClaims.email) return res.status(401).json({ message: "Unauthorized: Invalid session" });
-
-     // Gắn user info vào req để dùng sau
+    if (!decodedClaims.email || !decodedClaims.uid) {
+      throw new Error('Invalid session claims');
+    }
+    // Gắn user info vào req để dùng sau
     req.user = decodedClaims;
-
     next();
   } catch (error) {
-    res.clearCookie('session');
-    console.log("Error verifying session cookie:");
-    return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
+    console.error("Session verification failed:", error);
+    // Clear invalid cookie
+    res.clearCookie('session', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized: invalid session cookie'
+    });
   }
- 
+
 }
 
 // const auth = getAuth(admin);
 const authMiddleware = async (req, res, next) => {
-  
-  // đọc cookie "session" (nhờ cookie-parser đã parse)
-  // const sessionCookie = req.cookies?.session;
-
-  // if(sessionCookie){
-  //   try{
-  //     req.user = await getAuth().verifySessionCookie(sessionCookie, true);
-  //     console.log("[auth middleware] USE SESSION COOKIE:", req.user);
-  //     return next();
-  //   }catch(error){
-  //     res.clearCookie('session');
-  //     return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
-  //   }
-  // }
-
-  // Kiểm tra Bearer token
-  const authHeader = req.headers.authorization || '';
-  if (!authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Unauthorized: missing or invalid token' });
-  }
-  const idToken = authHeader.slice(7).trim();
   try {
+    // Kiểm tra Bearer token
+    const authHeader = req.headers.authorization || '';
+    if (!authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: missing or invalid token'
+      });
+    }
+
+    const idToken = authHeader.slice(7).trim();
+
+    if (!idToken) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Empty token provided' 
+      });
+    }
+
     const decodedToken = await getAuth().verifyIdToken(idToken);
-    req.user = decodedToken;
+    
+    if (!decodedToken.email || !decodedToken.uid) {
+      throw new Error('Invalid token claims');
+    }
+
+    
     console.log("[auth middleware] USE BEARER TOKEN:", req.user);
+
+    req.user = decodedToken;
     req.idToken = idToken;
-    return next();
-  } catch (err) {
-    console.log("Error verifying ID token:", err);
-    return res.status(401).json({ message: 'You are not authorized to access this resource' });
+    next();
+  } catch (error) {
+    console.log("Error verifying ID token:", error);
+
+    let errorMessage = 'Token verification failed';
+    
+    if (error.code === 'auth/id-token-expired') {
+      errorMessage = 'Token has expired';
+    } else if (error.code === 'auth/id-token-revoked') {
+      errorMessage = 'Token has been revoked';
+    }
+   
+    return res.status(401).json({ 
+      success: false,
+      message: errorMessage 
+    });
   }
 };
 
-export {authMiddleware, checkSession }
+export { authMiddleware, checkSession }
