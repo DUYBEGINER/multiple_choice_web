@@ -3,6 +3,7 @@ import { getAuth } from "firebase-admin/auth";
 
 
 const checkSession = async (req, res, next) => {
+  console.log("Checking session cookie...");
   try {
     const sessionCookie = req.cookies.session;
     if (!sessionCookie) {
@@ -11,7 +12,7 @@ const checkSession = async (req, res, next) => {
         message: 'No sesstion cookie found'
       });
     }
-
+    
     const decodedClaims = await getAuth().verifySessionCookie(sessionCookie, true);
     console.log("[auth middleware] USE SESSION COOKIE:", decodedClaims);
 
@@ -67,10 +68,11 @@ const authMiddleware = async (req, res, next) => {
     }
 
     
-    console.log("[auth middleware] USE BEARER TOKEN:", req.user);
+    
 
     req.user = decodedToken;
     req.idToken = idToken;
+    console.log("[auth middleware] USE BEARER TOKEN:", req.user);
     next();
   } catch (error) {
     console.log("Error verifying ID token:", error);

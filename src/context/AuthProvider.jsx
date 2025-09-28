@@ -9,27 +9,29 @@ function AuthProvider({ children }) {
   const isMountedRef = useRef(true);
   const retryTimeoutRef = useRef(null);
 
+  console.log("user", user);
 
    // Cleanup function
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
-      isMountedRef.current = false;
+      isMountedRef.current = false;  
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
       }
     };
   }, []);
 
+  console.log("loading", loading);
 
   const checkUserSession = useCallback(async (retryCount = 0) => {
     const MAX_RETRIES = 3;
 
     try{
-      const response = await checkSession("AuthProvider");
+      const response = await checkSession();
       console.log("API Response:", response);
       if (!isMountedRef.current) return;
-
-      if(response?.success && response?.data){
+      if(response?.data?.success && response?.data){
         setUser(response.data);
         setError(null);
         console.log("User session valid:", response.data);
@@ -56,6 +58,7 @@ function AuthProvider({ children }) {
         setUser(null);
         setError(error.message);
     } finally {
+      console.log("Finalizing session check", isMountedRef.current);
       if (isMountedRef.current) {
         console.log("Setting loading to false"); // Thêm log này
         setLoading(false);

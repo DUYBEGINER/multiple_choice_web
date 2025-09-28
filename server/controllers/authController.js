@@ -6,6 +6,7 @@ import { getUserByUid, createUser } from "../repositories/userRepository.js";
 
 // server/controllers/userController.js
 const getCurrentUser = async (req, res) => {
+  console.log("Fetching current user...");
   try {
     const user = req.user;
     if (!user) {
@@ -27,7 +28,7 @@ const getCurrentUser = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Login successful',
+      message: 'Login successful [getcurrentuser]',
       data: userRecord,
     });
 

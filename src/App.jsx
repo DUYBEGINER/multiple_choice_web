@@ -16,12 +16,13 @@ import useAuth from './hook/useAuth';
 
 function App() {
 
-  const { loading } = useAuth();
+  // const { loading } = useAuth();
 
-  if (loading) {
-    return <p>Loading...</p>; // Không render Routes khi đang xác thực
-  }
+  // if (loading) {
+  //   return <p>Loading...</p>; // Không render Routes khi đang xác thực
+  // }
 
+  // console.log(loading)
   return (
         <Routes>
           <Route path="/" element={<HomePage />} />
