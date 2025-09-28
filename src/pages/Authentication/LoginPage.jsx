@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
 import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from '../../api/authAPI'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import useAuth from "../../hook/useAuth";
 
@@ -14,44 +14,38 @@ import {openMessage} from '../../utils/messageUtils'
 
 
 function LoginPage(props) {
-  const { setUser } = useAuth();
-  
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  // Config Antd message
-  const [messageApi, contextHolder] = message.useMessage();
-  const key = "updatable"; // key để update cùng 1 message
-
   // Define navigate
   const navigate = useNavigate();
- 
+  const location = useLocation();
+
+  const { setUser, clearError } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
+  
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Config Antd message
+  const [messageApi, contextHolder] = message.useMessage();
+  const key = "login-message"; // key để update cùng 1 message
+
+
+
   //Cái này có thể viết hàm tái sử dụng
-   const handleChange = (e) => {
+   const handleChange = useCallback((e) => {
       const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
+      setFormData(prev => ({ ...prev, [name]: value }));
+      // Clear global auth errors
+      clearError();
+    }, [clearError]);
 
   // Define fields for the form
   const fields = [
     { id: "email", type: "email", label: "Email", autoComplete: "email" },
-    {
-      id: "password",
-      type: showPassword ? "text" : "password",
-      label: "Password",
-      toggle: true,
-    },
+    { id: "password", type: showPassword ? "text" : "password", label: "Password", toggle: true, },
   ];
 
   console.log("login render")
@@ -67,28 +61,45 @@ function LoginPage(props) {
       return;
     }
 
-
     setLoading(true);
     openMessage('loading', 'Đang xác thực...', null, message, messageApi, key);
 
-    
-    // Get token from Firebase
     try{
+      // Get token from Firebase
       const token = await getTokenSignInWithEmailAndPassword(email, password);
-      const user = await authRequest(token);
-      console.log("User data from authRequest:", user);
+      // Authenticate with backend
+      const response = await authRequest(token);
+      console.log("User data from authRequest:", response);
 
-      if (!user?.data) throw new Error('Không lấy được thông tin người dùng');
-      
-      setUser(user.data);
+      if (!response?.success || !response?.data) {
+        throw new Error('Không lấy được thông tin người dùng');
+      }
+
+      setUser(response.data);
       openMessage('success', 'Đăng nhập thành công!', null, message, messageApi, key);
-      navigate('/quiz-creator');
-      console.log("User logged in successfully:", user.data);
-     
+      
+      // Navigate to intended destination
+      const redirectTo = location.state?.from?.pathname || PATHS.QUIZ;
+      navigate(redirectTo, { replace: true });
+
+      console.log("User logged in successfully:", response.data);
+
     }catch(error){
       console.error("Login error:", error);
-      setSuccess(false);
-      openMessage('error', 'Lỗi đăng nhập', null, message, messageApi, key);
+      let errorMessage = 'Login failed. Please try again.';
+      
+      // Handle specific error types
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'No account found with this email address.';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many failed attempts. Please try again later.';
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+      
+      openMessage('error', errorMessage, null, message, messageApi, key);
     }finally{
       setLoading(false);
     }
@@ -116,6 +127,7 @@ function LoginPage(props) {
                   <input
                     type={field.type}
                     name={field.id}
+                    disabled={loading}
                     value={formData[field.id] || ""}
                     onChange={handleChange}
                     className="w-full border border-gray-300 p-2 rounded-lg outline-gray-300"
@@ -152,6 +164,7 @@ function LoginPage(props) {
             <div>
               <button
                 type="submit"
+                disabled={loading}
                 className="flex justify-center bg-indigo-500 text-white px-3 py-1.5 w-full text-sm/6 font-semibold rounded hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
                 Login
