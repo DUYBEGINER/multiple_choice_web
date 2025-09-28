@@ -2,13 +2,13 @@ import React , {useCallback, useContext} from 'react';
 import {SettingOutlined} from "@ant-design/icons";
 import { logOutRequest } from '../../../api/authAPI';
 import { getIdTokenForLogout } from '../../../firebase/auth';
-import { AuthContext } from '../../../context/AuthProvider';
-
+// import { AuthContext } from '../../../context/AuthProvider';
+import useAuth from '../../../hook/useAuth'
 
 function Header(props) {
 
     // Lấy user và setUser từ context
-    const {setUser } = useContext(AuthContext);
+    const { setUser } = useAuth();
 
 
     const handleLogout = async () => {

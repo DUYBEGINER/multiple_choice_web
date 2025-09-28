@@ -1,8 +1,16 @@
 import React, { useState, createContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { checkSession } from "../api/authAPI";
+import {AuthContext} from "./AuthContext";
 
-export const AuthContext = createContext();
+const pagesAllow = [
+  "/auth/login",
+  "/auth/signup",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+  "/auth/email-confirmation",
+];
+
 
 function AuthProvider({ children }) {
   const navigate = useNavigate();
@@ -11,7 +19,7 @@ function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // null = chưa đăng nhập
   const [loading, setLoading] = useState(true);
 
-  const pagesAllow = ["/auth/login", "/auth/signup", "/auth/forgot-password", "/auth/reset-password", "/auth/email-confirmation"];
+ 
 
   useEffect(() => {
       async function checkUser() {
@@ -20,21 +28,9 @@ function AuthProvider({ children }) {
           console.log("user in auth provider:", res.data);
           if (res?.data) {
             setUser(res.data); //Cập nhật user
-            // Nếu đang ở /login hoặc /signup mà đã đăng nhập -> chuyển hướng
-            // if (
-            //   location.pathname === "/auth/login" ||
-            //   location.pathname === "/auth/signup"
-            // ) {
-            //   navigate("/quiz-creator", { replace: true });
-            // }
           }
-      
         } catch (error) {
           setUser(null);
-          // Nếu chưa login mà vào trang khác -> bắt về login
-          // if (!pagesAllow.includes(location.pathname)) {
-          //   navigate("/auth/login", { replace: true });
-          // }
         } finally {
           setLoading(false);
         }

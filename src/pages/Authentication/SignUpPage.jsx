@@ -1,10 +1,10 @@
 import React, {useState, useContext} from 'react';
 import {Link, useNavigate , Navigate  } from 'react-router-dom';
 
+import useAuth from '../../hook/useAuth';
+
 import { validateSignup } from '../../utils/validatorInput';
 import { openMessage } from '../../utils/messageUtils';
-
-import {AuthContext} from '@/context/AuthProvider'
 
 import { getTokenSignUpWithEmailAndPassword } from '../../firebase/auth';
 
@@ -24,11 +24,10 @@ function SignUpPage(props) {
     const [messageApi, contextHolder] = message.useMessage();
 
     const key = "signup-message"; // key để update cùng 1 message
-    //Call set User from AuthContext
-    const { setUser } = useContext(AuthContext);
+
+    //Call set User from useAuth hook
+    const { setUser } = useAuth();
     
-
-
     const [formData, setFormData] = useState({
         email: '',
         displayName: '',

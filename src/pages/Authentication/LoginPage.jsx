@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
 import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from '../../api/authAPI'
 import { useNavigate } from "react-router-dom";
-import {AuthContext} from '../../context/AuthProvider'
+
+import useAuth from "../../hook/useAuth";
 
 import {PATHS} from '../../data/routePaths'
 
@@ -13,6 +14,8 @@ import {openMessage} from '../../utils/messageUtils'
 
 
 function LoginPage(props) {
+  const { setUser } = useAuth();
+  
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -22,7 +25,7 @@ function LoginPage(props) {
 
   // Define navigate
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+ 
 
   const [formData, setFormData] = useState({
     email: '',

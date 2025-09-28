@@ -9,13 +9,13 @@ import SetNewPassword from '@/pages/Authentication/SetNewPassword';
 import ForgotPassWord from './pages/Authentication/ForgotPassWord';
 import AuthLayout from './pages/Authentication/AuthLayout';
 import PrivateRoute from './components/PrivateRoute';
-import { AuthContext } from './context/AuthProvider';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
 import { PATHS } from './data/routePaths';
+import useAuth from './hook/useAuth';
 
 function App() {
 
-  const { loading } = useContext(AuthContext);
+  const { loading } = useAuth();
 
   if (loading) {
     return <p>Loading...</p>; // Không render Routes khi đang xác thực
