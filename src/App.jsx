@@ -8,7 +8,7 @@ import SignUpPage from '@/pages/Authentication/SignUpPage';
 import SetNewPassword from '@/pages/Authentication/SetNewPassword';
 import ForgotPassWord from './pages/Authentication/ForgotPassWord';
 import AuthLayout from './pages/Authentication/AuthLayout';
-import PrivateRoute from './components/PrivateRoute';
+import {PrivateRoute, AuthRoute} from './components/PrivateRoute';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
 import { PATHS } from './data/routePaths';
 import useAuth from './hook/useAuth';
@@ -35,7 +35,7 @@ function App() {
           {/* <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPassWord />} /> */}
-          <Route path={PATHS.AUTH.ROOT} element={<AuthLayout />}>
+          <Route path={PATHS.AUTH.ROOT} element={<AuthRoute><AuthLayout /></AuthRoute>}>
             <Route path={PATHS.AUTH_CHILD.LOGIN} element={<LoginPage />} />
             <Route path={PATHS.AUTH_CHILD.SIGNUP} element={<SignUpPage />} />
             <Route path={PATHS.AUTH_CHILD.FORGOTPASSWORD} element={<ForgotPassWord />} />

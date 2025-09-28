@@ -22,12 +22,16 @@ function AuthProvider({ children }) {
  
 
   useEffect(() => {
+      let isMounted = true;
       async function checkUser() {
         try {
           const res = await checkSession("AuthProvider"); // gọi API backend
+          const data = res?.data ?? null;
           console.log("user in auth provider:", res.data);
-          if (res?.data) {
-            setUser(res.data); //Cập nhật user
+          
+          if (!isMounted) return;
+          if (data) {
+            setUser(data); //Cập nhật user
           }
         } catch (error) {
           setUser(null);
