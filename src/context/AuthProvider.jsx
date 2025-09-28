@@ -32,7 +32,7 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{ user, loading, setUser }}>
-      {loading ? <div>Loading...</div> : children}
+      {children}
     </AuthContext.Provider>
   );
 }
