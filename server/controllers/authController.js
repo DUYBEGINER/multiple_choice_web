@@ -9,20 +9,20 @@ const getCurrentUser = async (req, res) => {
   try {
     const user = req.user;
     if (!user) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
-        message: "Not authenticated" 
+        message: "Not authenticated"
       });
     }
 
     const userRecord = await getUserByUid(user.uid);
     if (!userRecord) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: "User not found" 
+        message: "User not found"
       });
     }
-      
+
     console.log("[auth controller] Current user auth:", userRecord);
 
     return res.status(200).json({
@@ -33,59 +33,73 @@ const getCurrentUser = async (req, res) => {
 
   } catch (err) {
     console.error("Error in /me:", err);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: "Internal server error" 
+      message: "Internal server error"
     });
   }
 };
 
 
 const handleAuthWithSession = async (req, res) => {
-  const user = req.user;
-  const idToken = req.idToken;
-  console.log("Token in signIn:", idToken);
-  console.log("Logging in user:", user);
-
   try {
+    const user = req.user;
+    const idToken = req.idToken;
+
+    console.log("Token in signIn:", idToken);
+    console.log("Logging in user:", user);
+
+    if (!user || !idToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid authentication data'
+      });
+    }
+
     let userRecord = await getUserByUid(user.uid);
 
     if (!userRecord) {
+      // Create new user if doesn't exist
       userRecord = await createUser(user.uid, user.email, user.displayName);
     }
 
-    const {sessionCookie, expiresIn} = await createAndSetSessionCookie(idToken);
+    const { sessionCookie, expiresIn } = await createAndSetSessionCookie(idToken);
 
+    // Set secure cookie
     res.cookie("session", sessionCookie, {
       maxAge: expiresIn,
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS trong production
       sameSite: "strict",
       path: "/",
     });
-    
+
     return res.status(200).json({
+      success: true,
       message: 'Login successful',
       data: userRecord,
     });
   } catch (error) {
     console.error('Error logging in user:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ 
+      success: false, 
+      message: 'Authentication failed' });
   }
 }
 
 const logOut = async (req, res) => {
-  try{
+  try {
     console.log("Logging out user:", req.user);
     await getAuth().revokeRefreshTokens(req.user.uid);
 
-   res.clearCookie('session', {
+    res.clearCookie('session', {
       httpOnly: true,
       sameSite: 'strict',
       path: '/',            // khớp path đã set
       // domain: '.your-domain.com', // nếu lúc set có domain, thêm vào đây
     });
-  return res.status(200).json({ message:'Logout successful' });
-  }catch(err){
+    return res.status(200).json({ message: 'Logout successful' });
+  } catch (err) {
     console.error("Error in /logout:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
