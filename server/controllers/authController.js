@@ -6,26 +6,37 @@ import { getUserByUid, createUser } from "../repositories/userRepository.js";
 
 // server/controllers/userController.js
 const getCurrentUser = async (req, res) => {
-  const user = req.user;
-   if (!user) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
   try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ 
+        success: false,
+        message: "Not authenticated" 
+      });
+    }
+
     const userRecord = await getUserByUid(user.uid);
     if (!userRecord) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ 
+        success: false,
+        message: "User not found" 
+      });
     }
-    
+      
     console.log("[auth controller] Current user auth:", userRecord);
 
     return res.status(200).json({
+      success: true,
       message: 'Login successful',
       data: userRecord,
     });
 
   } catch (err) {
     console.error("Error in /me:", err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ 
+      success: false,
+      message: "Internal server error" 
+    });
   }
 };
 
