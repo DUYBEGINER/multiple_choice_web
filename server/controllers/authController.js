@@ -76,16 +76,18 @@ const handleAuthWithSession = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Login successful',
+      message: 'Login or Sign up successful',
       data: userRecord,
     });
   } catch (error) {
     console.error('Error logging in user:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Authentication failed' });
+    res.status(500).json({
+      success: false,
+      message: 'Authentication failed'
+    });
   }
 }
+
 
 const logOut = async (req, res) => {
   try {
@@ -95,41 +97,62 @@ const logOut = async (req, res) => {
     res.clearCookie('session', {
       httpOnly: true,
       sameSite: 'strict',
-      path: '/',            // khớp path đã set
-      // domain: '.your-domain.com', // nếu lúc set có domain, thêm vào đây
+      path: '/',   
     });
     return res.status(200).json({ message: 'Logout successful' });
   } catch (err) {
     console.error("Error in /logout:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
-}
-
-const signUp = async (req, res) => {
-  const { uid, email } = req.user;
-  const idToken = req.idToken;
-  const { displayName } = req.body;  // frontend gửi displayName lên
-  console.log("Token in signUp:", idToken);
-  console.log("user sign up:", req.user)
-  try {
-    const existingUser = await getUserByUid(uid);
-
-    if (existingUser) {
-      return res.status(409).json({ message: 'User already exists' });
-    }
-
-    const newUser = await createUser(uid, email, displayName);
-
-    await createAndSetSessionCookie(res, idToken);
-
-    return res.status(201).json({
-      message: "User signed up successfully",
-      user: newUser,
-    });
-  } catch (error) {
-    console.error("Error signing up user:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
 };
 
-export { handleAuthWithSession, signUp, getCurrentUser, logOut };
+// const signUp = async (req, res) => {
+//   try {
+//     const { uid, email } = req.user;
+//     const idToken = req.idToken;
+//     const { displayName } = req.body;  // frontend gửi displayName lên
+
+//     console.log("Token in signUp:", idToken);
+//     console.log("user sign up:", req.user)
+
+//      if (!uid || !email || !idToken) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Missing required authentication data'
+//       });
+//     }
+
+//     const existingUser = await getUserByUid(uid);
+
+//     if (existingUser) {
+//       return res.status(409).json({ 
+//         success: false,
+//         message: 'User already exists'
+//       });
+//     }
+
+//     const newUser = await createUser(uid, email, displayName);
+
+//     const { sessionCookie, expiresIn } = await createAndSetSessionCookie(res, idToken);
+    
+//     // Set secure cookie
+//     res.cookie("session", sessionCookie, {
+//       maxAge: expiresIn,
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS trong production
+//       sameSite: "strict",
+//     });
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "User created successfully",
+//       user: newUser,
+//     });
+//   } catch (error) {
+//     console.error("Error signing up user:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+export { handleAuthWithSession, getCurrentUser, logOut };

@@ -23,7 +23,7 @@ router.use(timeLog)
 //Auth routes
 router.get("/me", checkSession , getCurrentUser);
 router.post('/login', authMiddleware, handleAuthWithSession);
-router.post('/signup', authMiddleware, signUp);
 router.post('/logout', authMiddleware, logOut);
+// router.post('/signup', authMiddleware, signUp);
 
 export default router;
