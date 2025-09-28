@@ -1,25 +1,10 @@
 import React, { useState, createContext, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { checkSession } from "../api/authAPI";
 import {AuthContext} from "./AuthContext";
 
-const pagesAllow = [
-  "/auth/login",
-  "/auth/signup",
-  "/auth/forgot-password",
-  "/auth/reset-password",
-  "/auth/email-confirmation",
-];
-
-
 function AuthProvider({ children }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [user, setUser] = useState(null); // null = chưa đăng nhập
   const [loading, setLoading] = useState(true);
-
- 
 
   useEffect(() => {
       let isMounted = true;
@@ -28,19 +13,22 @@ function AuthProvider({ children }) {
           const res = await checkSession("AuthProvider"); // gọi API backend
           const data = res?.data ?? null;
           console.log("user in auth provider:", res.data);
-          
+         
           if (!isMounted) return;
           if (data) {
             setUser(data); //Cập nhật user
+          }else{
+            setUser(null);
           }
         } catch (error) {
+          console.error("Error checking session:", error);
           setUser(null);
         } finally {
           setLoading(false);
         }
       }
       checkUser();
-  }, [navigate, location]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, loading, setUser }}>

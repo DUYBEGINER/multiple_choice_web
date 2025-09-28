@@ -1,4 +1,4 @@
-import {React, useContext } from 'react';
+import {React} from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import './App.css'
 import HomePage from './pages/HomePage';
@@ -32,9 +32,6 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/forgot-password" element={<ForgotPassWord />} /> */}
           <Route path={PATHS.AUTH.ROOT} element={<AuthRoute><AuthLayout /></AuthRoute>}>
             <Route path={PATHS.AUTH_CHILD.LOGIN} element={<LoginPage />} />
             <Route path={PATHS.AUTH_CHILD.SIGNUP} element={<SignUpPage />} />

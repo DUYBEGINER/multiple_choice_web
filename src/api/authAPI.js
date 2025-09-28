@@ -13,7 +13,7 @@ const checkSession = async (component) => {
     return null;
   } catch (err) {
     console.error("Error response", err.response);
-    return null;
+    throw new Error(err.response?.data?.message || 'Error checking session');
   }
 }
 
