@@ -91,18 +91,34 @@ const handleAuthWithSession = async (req, res) => {
 
 const logOut = async (req, res) => {
   try {
-    console.log("Logging out user:", req.user);
-    await getAuth().revokeRefreshTokens(req.user.uid);
+    const user = req.user;
+    
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'No user session found'
+      });
+    }
+
+    console.log("Logging out user:", user);
+    await getAuth().revokeRefreshTokens(user.uid);
 
     res.clearCookie('session', {
       httpOnly: true,
       sameSite: 'strict',
       path: '/',   
     });
-    return res.status(200).json({ message: 'Logout successful' });
+
+    return res.status(200).json({ 
+      success: true,
+      message: 'Logout successful' 
+    });
   } catch (err) {
     console.error("Error in /logout:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ 
+      success: false,
+      message: "Internal server error" 
+    });
   }
 };
 
