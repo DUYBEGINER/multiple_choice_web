@@ -18,6 +18,7 @@ const checkSession = async (req, res, next) => {
     next();
   } catch (error) {
     res.clearCookie('session');
+    console.log("Error verifying session cookie:");
     return res.status(401).json({ message: 'Unauthorized: invalid session cookie' });
   }
  

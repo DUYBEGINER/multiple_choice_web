@@ -4,7 +4,7 @@ import useAuth from "../../hook/useAuth";
 import  LoadingSpinner  from "../LoadingSpinner";
 import { PATHS } from "../../data/routePaths";
 
-const PrivateRoute = memo(({ children, redirectTo = PATHS.AUTH.LOGIN }) => {
+const PrivateRoute = ({ children, redirectTo = PATHS.AUTH.LOGIN }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -21,7 +21,7 @@ const PrivateRoute = memo(({ children, redirectTo = PATHS.AUTH.LOGIN }) => {
     );
 
   return children;
-});
+}
 
 PrivateRoute.displayName = 'PrivateRoute';
 

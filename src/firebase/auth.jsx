@@ -30,18 +30,32 @@ export const getTokenSignUpWithEmailAndPassword = async (email, password, displa
   }
 }
 
+// export const getIdTokenForLogout = async () => {
+//   const auth = getAuth();
+//   const user = auth.currentUser;
+//   if (!user) {
+//     // chờ init xong nếu F5 xong currentUser chưa sẵn sàng
+//     const { onAuthStateChanged } = "firebase/auth";
+//     await new Promise(resolve => {
+//       const unsub = onAuthStateChanged(auth, () => { unsub(); resolve(); });
+//     });
+//   }
+//   // true = force refresh (đảm bảo còn hạn)
+//   return await auth.currentUser.getIdToken(true);
+// }
 export const getIdTokenForLogout = async () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  if (!user) {
-    // chờ init xong nếu F5 xong currentUser chưa sẵn sàng
-    const { onAuthStateChanged } = "firebase/auth";
-    await new Promise(resolve => {
-      const unsub = onAuthStateChanged(auth, () => { unsub(); resolve(); });
-    });
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const token = await user.getIdToken();
+      return token;
+    } else {
+      throw new Error("No user is currently signed in");
+    }
+  } catch (error) {
+    console.error("Error getting token for logout:", error);
+    throw error;
   }
-  // true = force refresh (đảm bảo còn hạn)
-  return await auth.currentUser.getIdToken(true);
 }
 
 
@@ -91,5 +105,16 @@ export const confirmPasswordResetWithCode = async (oobCode, newPassword) => {
         }
 
     throw new Error(errorMessage);
+  }
+}
+
+// Logout function
+export const logOut = async () => {
+  try {
+    await signOut(auth);
+    console.log("User signed out successfully");
+  } catch (error) {
+    console.error("Error signing out:", error);
+    throw error;
   }
 }
