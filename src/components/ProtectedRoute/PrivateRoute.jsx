@@ -5,9 +5,10 @@ import  LoadingSpinner  from "../LoadingSpinner";
 import { PATHS } from "../../data/routePaths";
 
 const PrivateRoute = ({ children, redirectTo = PATHS.AUTH.LOGIN }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, authenticate } = useAuth();
   const location = useLocation();
 
+  console.log("PrivateRoute render", { user, loading, authenticate });
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

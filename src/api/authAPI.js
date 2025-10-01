@@ -5,9 +5,10 @@ import {axiosClient} from "../utils/axiosClient";
 const checkSession = async (component) => {
   try {
     // console.log("component call api:", component);
+    const datenow = new Date().toLocaleString();
     const res = await axiosClient.get("/auth/me");
     if (res && res.data) {
-      console.log("Response from checkSession:", res.data);
+      console.log(`Response from checkSession: [${datenow}]`, res.data);
       return res.data; // Trả về dữ liệu user
     }
     return null;

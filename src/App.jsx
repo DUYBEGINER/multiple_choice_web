@@ -35,7 +35,7 @@ function App() {
             }
           />
           <Route path={PATHS.AUTH.ROOT} element={<AuthRoute><AuthLayout /></AuthRoute>}>
-            <Route path={PATHS.AUTH_CHILD.LOGIN} element={<LoginPage />} />
+            <Route path={PATHS.AUTH_CHILD.LOGIN} element={<LoginPage/>} />
             <Route path={PATHS.AUTH_CHILD.SIGNUP} element={<SignUpPage />} />
             <Route path={PATHS.AUTH_CHILD.FORGOTPASSWORD} element={<ForgotPassWord />} />
             <Route path={PATHS.AUTH_CHILD.RESET} element={<SetNewPassword />} />

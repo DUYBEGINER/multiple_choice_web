@@ -8,16 +8,17 @@ import useAuth from '../../../hook/useAuth'
 function Header(props) {
 
     // Lấy user và setUser từ context
-    const { setUser } = useAuth();
+    const { setUser, setAuthenticate } = useAuth();
 
 
     const handleLogout = async () => {
       try {
         const idToken = await getIdTokenForLogout();
         await logOutRequest(idToken);
-         await logOut();
+        await logOut();
         console.log("Đăng xuất thành công");
         setUser(null);
+        setAuthenticate(false);
         // Có thể navigate tới trang login
       } catch (error) {
         console.error("Logout error:", error);

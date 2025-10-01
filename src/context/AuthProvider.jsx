@@ -4,6 +4,7 @@ import {AuthContext} from "./AuthContext";
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // null = chưa đăng nhập
+  const [authenticate, setAuthenticate] = useState(false); // false = chưa xác thực
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const isMountedRef = useRef(true);
@@ -31,12 +32,14 @@ function AuthProvider({ children }) {
       const response = await checkSession();
       console.log("API Response:", response);
       if (!isMountedRef.current) return;
-      if(response?.data?.success && response?.data){
+      if(response?.success && response?.data){
         setUser(response.data);
+        setAuthenticate(true);
         setError(null);
         console.log("User session valid:", response.data);
       }else{
         console.log("No valid user session"); 
+        setAuthenticate(false);
         setUser(null);
         setError(null);
       }
@@ -44,7 +47,7 @@ function AuthProvider({ children }) {
     } catch (error) {
       console.error("Error checking user session:", error);
 
-       if (!isMountedRef.current) return;
+      if (!isMountedRef.current) return;
       
         // Retry logic for network errors
         if (retryCount < MAX_RETRIES && error.code === 'NETWORK_ERROR') {
@@ -53,8 +56,8 @@ function AuthProvider({ children }) {
             checkUserSession(retryCount + 1);
           }, retryDelay);
           return;
-        }
-        
+        } 
+        setAuthenticate(false);
         setUser(null);
         setError(error.message);
     } finally {
@@ -77,6 +80,8 @@ function AuthProvider({ children }) {
 
   const refreshSession = useCallback(() => {
     setLoading(true);
+    setUser(null);
+    setAuthenticate(false);
     setError(null);
     checkUserSession();
   }, [checkUserSession]);
@@ -85,15 +90,17 @@ function AuthProvider({ children }) {
   const contextValue = {
     user,
     loading,
+    authenticate,
     error,
     setUser,
+    setAuthenticate,
     clearError,
     refreshSession
   };
 
   return (
     <AuthContext.Provider value={contextValue}>
-      {loading ? <div>Loading...</div> : children}
+      {children}
     </AuthContext.Provider>
   );
 }

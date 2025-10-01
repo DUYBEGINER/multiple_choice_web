@@ -3,7 +3,7 @@ import { getAuth } from "firebase-admin/auth";
 
 
 const checkSession = async (req, res, next) => {
-  console.log("Checking session cookie...");
+  console.log("request", req.cookies);
   try {
     const sessionCookie = req.cookies.session;
     if (!sessionCookie) {
