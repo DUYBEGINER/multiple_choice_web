@@ -6,6 +6,7 @@ const checkSession = async (req, res, next) => {
   console.log("request", req.cookies);
   try {
     const sessionCookie = req.cookies.session;
+    console.log("Session cookie:", sessionCookie);
     if (!sessionCookie) {
       return res.status(401).json({
         success: false,
@@ -31,6 +32,7 @@ const checkSession = async (req, res, next) => {
       sameSite: 'strict',
       path: '/',
     });
+
 
     return res.status(401).json({
       success: false,
