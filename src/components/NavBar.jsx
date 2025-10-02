@@ -8,8 +8,8 @@ import {PATHS} from "../data/routePaths";
 
 export default function NavBar() {
   return (
-    <nav className="bg-[#2b3037] flex">
-      <div className="flex flex-1 flex-col md:flex-row md:items-center md:justify-between w-full max-w-screen-xl mx-auto ">
+    <nav className="bg-[#2b3037] ">
+      <div className="container mx-auto flex items-center justify-between px-4 py-2">
           <div className="flex justify-center items-center">
             <h2 className="text-white text-center text-xl font-bold">
               Duy Website
