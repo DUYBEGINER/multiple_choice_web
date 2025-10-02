@@ -12,7 +12,7 @@ export default function NavBar() {
       <div className="container mx-auto flex items-center justify-between px-4 py-2">
           <div className="flex justify-center items-center">
             <h2 className="text-white text-center text-xl font-bold">
-              Duy Website
+              Test website
             </h2>
           </div>
           
@@ -27,10 +27,10 @@ export default function NavBar() {
                 <a className="">Take a Tour</a>
                 <DownOutlined className="text-sm" />
               </div>
-              <div className="absolute left-0 z-10  pointer-events-none group-hover:pointer-events-auto">
+              <div className="absolute left-0 z-10 min-w-[200px] pointer-events-none group-hover:pointer-events-auto">
                 <ul className="py-1 bg-white mt-0.5 rounded-lg shadow-[0_20px_25px_rgba(0,0,0,0.35)] transition-all duration-300 ease-in-out -translate-y-2 group-hover:translate-y-2 transform scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100">
                   <li>
-                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Optiosdadddsasdn 1</a>
+                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 1</a>
                   </li>
                   <li>
                     <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 2</a>

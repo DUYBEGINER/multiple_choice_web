@@ -7,8 +7,9 @@ export default function Hero() {
   ];
 
   return (
-    <section className="bg-[radial-gradient(1200px_400px_at_25%_20%,rgba(0,0,0,.12),transparent_60%),#f6f7f8]">
-      <div className="container grid gap-8 px-6 py-12 md:grid-cols-2 mx-auto items-center">
+    // <section className="bg-[radial-gradient(1200px_400px_at_25%_20%,rgba(0,0,0,.12),transparent_60%),#f6f7f8]">
+    <section className="bg-[url('image2.png')] bg-cover bg-center">
+      <div className="container grid gap-4 px-6 py-12 md:grid-cols-2 mx-auto items-center">
           <div>
             <h1 className="text-4xl font-extrabold leading-tight">
               The Best Online Testing for
@@ -27,6 +28,11 @@ export default function Hero() {
         
           <div className="relative flex justify-center">
             <div className="w-[520px] overflow-hidden rounded-2xl bg-white shadow-xl">
+              {/* <img
+                src="image.png"
+                alt="App screenshot"/> */}
+
+
               <div className="flex items-center gap-2 border-b px-4 py-3">
                 <span className="text-xl">🗂</span>
                 <span className="font-medium">Skill Certification</span>
