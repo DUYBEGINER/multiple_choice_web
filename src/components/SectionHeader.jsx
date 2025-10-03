@@ -5,7 +5,7 @@ function SectionHeader(props) {
          <div className="w-full ">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-xl font-medium text-gray-800 mb-2">SÁCH MỚI CẬP NHẬT</h1>
+                    <h1 className="text-xl font-medium text-gray-800 mb-2">TRẮC NGHIỆM MỚI CẬP NHẬT</h1>
                     <div className="w-24 h-1 bg-red-500 rounded-t-2xl"></div>
                 </div>
                 <a href="#" className="text-blue-600 text-sm hover:underline">

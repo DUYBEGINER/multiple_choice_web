@@ -6,7 +6,9 @@ import {PATHS} from "../data/routePaths";
 
 
 
-export default function NavBar() {
+export default function NavBar(props) {
+  const { user } = props;
+
   return (
     <nav className="bg-[#2b3037] ">
       <div className="container mx-auto flex items-center justify-between px-4 py-2">
@@ -48,11 +50,16 @@ export default function NavBar() {
           </ul>
 
             {/* Nút Đăng nhập & Đăng ký */}
-          <div className="flex items-center gap-3 px-6 py-3">
-            <Link
-              to={PATHS.AUTH.LOGIN}
-              className="px-4 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#2b3037] transition"
-            >
+          {user ? (
+            <div className="flex items-center gap-3 px-6 py-3">
+              <span className="text-gray-200">Hello, {user.email}</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 px-6 py-3">
+              <Link
+                to={PATHS.AUTH.LOGIN}
+                className="px-4 py-2 rounded-lg border border-white text-white hover:bg-white hover:text-[#2b3037] transition"
+              >
               Đăng nhập
             </Link>
             <Link
@@ -62,6 +69,7 @@ export default function NavBar() {
               Đăng ký
             </Link>
           </div>
+        )}
       </div>
     </nav>
   );

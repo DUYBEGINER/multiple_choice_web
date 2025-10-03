@@ -31,7 +31,9 @@ function AuthProvider({ children }) {
     try{
       const response = await checkSession();
       console.log("API Response:", response);
+
       if (!isMountedRef.current) return;
+      
       if(response?.success && response?.data){
         setUser(response.data);
         setAuthenticate(true);
@@ -78,6 +80,7 @@ function AuthProvider({ children }) {
     setError(null);
   }, []);
 
+  
   const refreshSession = useCallback(() => {
     setLoading(true);
     setUser(null);
@@ -97,6 +100,8 @@ function AuthProvider({ children }) {
     clearError,
     refreshSession
   };
+  
+  console.log("AuthProvider context:", contextValue);
 
   return (
     <AuthContext.Provider value={contextValue}>

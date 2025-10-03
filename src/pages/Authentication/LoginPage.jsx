@@ -3,7 +3,7 @@ import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
 import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from '../../api/authAPI'
-import { useNavigate, useLocation } from "react-router-dom";
+// import { useNavigate, useLocation } from "react-router-dom";
 
 import useAuth from "../../hook/useAuth";
 
@@ -15,8 +15,8 @@ import {openMessage} from '../../utils/messageUtils'
 
 function LoginPage(props) {
   // Define navigate
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
   const { setUser, clearError } = useAuth();
 
@@ -79,8 +79,8 @@ function LoginPage(props) {
       openMessage('success', 'Đăng nhập thành công!', null, message, messageApi, key);
       
       // Navigate to intended destination
-      const redirectTo = location.state?.from?.pathname || PATHS.QUIZ;
-      navigate(redirectTo, { replace: true });
+      // const redirectTo = location.state?.from?.pathname || PATHS.QUIZ;
+      // navigate(redirectTo, { replace: true });
 
       console.log("User logged in successfully:", response.data);
 
