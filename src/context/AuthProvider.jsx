@@ -1,112 +1,134 @@
 import React, { useState, useRef, useEffect, useCallback, use } from "react";
 import { checkSession } from "../api/authAPI";
-import {AuthContext} from "./AuthContext";
+import { AuthContext } from "./AuthContext";
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // null = chưa đăng nhập
-  const [authenticate, setAuthenticate] = useState(false); // false = chưa xác thực
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [state, setState] = useState({
+    user: null,
+    authenticate: false,
+    loading: true,
+    error: null,
+  });
+
   const isMountedRef = useRef(true);
-  const retryTimeoutRef = useRef(null);
+  const isCheckingRef = useRef(false);
+  const sessionCheckIntervalRef = useRef(null);
 
-  console.log("user", user);
-
-   // Cleanup function
+  // Cleanup function
   useEffect(() => {
-    isMountedRef.current = true;
     return () => {
-      isMountedRef.current = false;  
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
+      isMountedRef.current = false;
+      if (sessionCheckIntervalRef.current) {
+        clearInterval(sessionCheckIntervalRef.current);
       }
     };
   }, []);
 
-  console.log("loading", loading);
+  /**
+   * Update auth state safely
+   */
+  const updateState = useCallback((updates) => {
+    if (isMountedRef.current) {
+      setState((prev) => ({ ...prev, ...updates }));
+    }
+  }, []);
 
+  /**
+   * Check session with retry logic
+   */
   const checkUserSession = useCallback(async (retryCount = 0) => {
+    if (isCheckingRef.current || !isMountedRef.current) {
+      return;
+    }
+
+    isCheckingRef.current = true;
     const MAX_RETRIES = 3;
 
-    try{
+    try {
       const response = await checkSession();
       console.log("API Response:", response);
 
       if (!isMountedRef.current) return;
-      
-      if(response?.success && response?.data){
-        setUser(response.data);
-        setAuthenticate(true);
-        setError(null);
-        console.log("User session valid:", response.data);
-      }else{
-        console.log("No valid user session"); 
-        setAuthenticate(false);
-        setUser(null);
-        setError(null);
-      }
 
+      if (response?.success && response?.data) {
+        updateState({
+          user: response.data,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
+        console.log("User session valid:", response.data);
+      } else {
+        updateState({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+          error: null,
+        });
+      }
     } catch (error) {
       console.error("Error checking user session:", error);
 
       if (!isMountedRef.current) return;
-      
-        // Retry logic for network errors
-        if (retryCount < MAX_RETRIES && error.code === 'NETWORK_ERROR') {
-          const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
-          retryTimeoutRef.current = setTimeout(() => {
-            checkUserSession(retryCount + 1);
-          }, retryDelay);
-          return;
-        } 
-        setAuthenticate(false);
-        setUser(null);
-        setError(error.message);
-    } finally {
-      console.log("Finalizing session check", isMountedRef.current);
-      if (isMountedRef.current) {
-        console.log("Setting loading to false"); // Thêm log này
-        setLoading(false);
+
+      // Retry logic for network errors
+      if (
+        retryCount < MAX_RETRIES &&
+        (error.code === "NETWORK_ERROR" || !error.response)
+      ) {
+        const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+        setTimeout(() => {
+          isCheckingRef.current = false;
+          checkUserSession(retryCount + 1);
+        }, delay);
+        return;
       }
+      updateState({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: error.message,
+      });
+    } finally {
+      isCheckingRef.current = false;
     }
   }, []);
 
+  /**
+   * Initial session check
+   */
   useEffect(() => {
     checkUserSession();
   }, [checkUserSession]);
 
-
+  /**
+   * Clear error
+   */
   const clearError = useCallback(() => {
-    setError(null);
-  }, []);
+    updateState({ error: null });
+  }, [updateState]);
 
-  
+  /**
+   * Refresh session
+   */
   const refreshSession = useCallback(() => {
-    setLoading(true);
-    setUser(null);
-    setAuthenticate(false);
-    setError(null);
-    checkUserSession();
-  }, [checkUserSession]);
-
+    updateState({ isLoading: true, error: null });
+    checkSession();
+  }, [updateState, checkSession]);
 
   const contextValue = {
-    user,
-    loading,
-    authenticate,
-    error,
-    setUser,
-    setAuthenticate,
+   user: state.user,
+    isAuthenticated: state.isAuthenticated,
+    isLoading: state.isLoading,
+    error: state.error,
     clearError,
-    refreshSession
+    refreshSession,
   };
-  
+
   console.log("AuthProvider context:", contextValue);
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 
