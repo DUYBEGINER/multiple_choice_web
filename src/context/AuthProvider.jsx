@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback, use } from "react";
 import { checkSession } from "../api/authAPI";
 import { AuthContext } from "./AuthContext";
+import { loginWithEmailAndPassword, signupWithEmailAndPassword, logoutUser } from "../services/authService";
+
 
 function AuthProvider({ children }) {
   const [state, setState] = useState({
@@ -102,6 +104,102 @@ function AuthProvider({ children }) {
   }, [checkUserSession]);
 
   /**
+   * Periodic session check
+   */
+  useEffect(() => {
+    if (state.isAuthenticated) {
+      sessionCheckIntervalRef.current = setInterval(() => {
+        checkSession();
+      }, 5 * 60 * 1000); // Every 5 minutes
+
+      return () => {
+        if (sessionCheckIntervalRef.current) {
+          clearInterval(sessionCheckIntervalRef.current);
+        }
+      };
+    }
+  }, [state.isAuthenticated, checkSession]);
+
+
+    /**
+   * Login
+   */
+  const login = useCallback(async (email, password) => {
+    updateState({ isLoading: true, error: null });
+
+    try {
+      const user = await loginWithEmailAndPassword(email, password);
+      updateState({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null
+      });
+      return { success: true, user };
+    } catch (error) {
+      updateState({
+        isLoading: false,
+        error: error.message
+      });
+      return { success: false, error: error.message };
+    }
+  }, [updateState]);
+
+   /**
+   * Signup
+   */
+  const signup = useCallback(async (email, password, displayName) => {
+    updateState({ isLoading: true, error: null });
+
+    try {
+      const user = await signupWithEmailAndPassword(email, password, displayName);
+      
+      updateState({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null
+      });
+
+      return { success: true, user };
+    } catch (error) {
+      updateState({
+        isLoading: false,
+        error: error.message
+      });
+      return { success: false, error: error.message };
+    }
+  }, [updateState]);
+
+   /**
+   * Logout
+   */
+  const logout = useCallback(async () => {
+    try {
+      await logoutUser();
+
+      updateState({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null
+      });
+
+      return { success: true };
+    } catch (error) {
+      // Clear state even if logout fails
+      updateState({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null
+      });
+      
+      return { success: false, error: error.message };
+    }
+  }, [updateState]);
+
+  /**
    * Clear error
    */
   const clearError = useCallback(() => {
@@ -117,10 +215,13 @@ function AuthProvider({ children }) {
   }, [updateState, checkSession]);
 
   const contextValue = {
-   user: state.user,
+    user: state.user,
     isAuthenticated: state.isAuthenticated,
     isLoading: state.isLoading,
     error: state.error,
+    login,
+    signup,
+    logout,
     clearError,
     refreshSession,
   };

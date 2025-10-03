@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
-import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
-import {authRequest} from '../../api/authAPI'
-// import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import useAuth from "../../hook/useAuth";
 
@@ -15,10 +13,10 @@ import {openMessage} from '../../utils/messageUtils'
 
 function LoginPage(props) {
   // Define navigate
-  // const navigate = useNavigate();
-  // const location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const { setUser, clearError } = useAuth();
+  const { login, clearError } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -35,12 +33,16 @@ function LoginPage(props) {
 
 
   //Cái này có thể viết hàm tái sử dụng
-   const handleChange = useCallback((e) => {
-      const { name, value } = e.target;
-      setFormData(prev => ({ ...prev, [name]: value }));
-      // Clear global auth errors
-      clearError();
-    }, [clearError]);
+  //  const handleChange = useCallback((e) => {
+  //     const { name, value } = e.target;
+  //     setFormData(prev => ({ ...prev, [name]: value }));
+  //     // Clear global auth errors
+  //   }, [clearError]);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    clearError();
+  };
 
   // Define fields for the form
   const fields = [
@@ -53,55 +55,23 @@ function LoginPage(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = formData;
 
-
-    if (!email || !password) {
-      openMessage('warning', 'Vui lòng nhập đủ Email và Mật khẩu', null, message, messageApi, key);
+     if (!formData.email || !formData.password) {
+      message.warning('Please enter email and password');
       return;
     }
 
     setLoading(true);
     openMessage('loading', 'Đang xác thực...', null, message, messageApi, key);
 
-    try{
-      // Get token from Firebase
-      const token = await getTokenSignInWithEmailAndPassword(email, password);
-      // Authenticate with backend
-      const response = await authRequest(token);
-      console.log("User data from authRequest:", response);
+    const result = await login(formData.email, formData.password);
 
-      if (!response?.success || !response?.data) {
-        throw new Error('Không lấy được thông tin người dùng');
-      }
-
-      setUser(response.data);
+    if (result.success) {
       openMessage('success', 'Đăng nhập thành công!', null, message, messageApi, key);
-      
-      // Navigate to intended destination
-      // const redirectTo = location.state?.from?.pathname || PATHS.QUIZ;
-      // navigate(redirectTo, { replace: true });
-
-      console.log("User logged in successfully:", response.data);
-
-    }catch(error){
-      console.error("Login error:", error);
-      let errorMessage = 'Login failed. Please try again.';
-      
-      // Handle specific error types
-      if (error.code === 'auth/user-not-found') {
-        errorMessage = 'No account found with this email address.';
-      } else if (error.code === 'auth/wrong-password') {
-        errorMessage = 'Incorrect password. Please try again.';
-      } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = 'Too many failed attempts. Please try again later.';
-      } else if (error.code === 'auth/network-request-failed') {
-        errorMessage = 'Network error. Please check your connection.';
-      }
-      
-      openMessage('error', errorMessage, null, message, messageApi, key);
-    }finally{
-      setLoading(false);
+      const redirectTo = location.state?.from?.pathname || '/quiz-creator';
+      navigate(redirectTo, { replace: true });
+    } else {
+      openMessage('error', result.error, null, message, messageApi, key);
     }
   }
 
