@@ -23,7 +23,7 @@ function LoginPage(props) {
     password: ''
   });
   
-  
+  const [isLoading, setIsLoading] = useState(false); // Local loading state
   const [showPassword, setShowPassword] = useState(false);
 
   // Config Antd message
@@ -62,14 +62,15 @@ function LoginPage(props) {
       return;
     }
 
+    
     openMessage('loading', 'Đang xác thực...', null, message, messageApi, key);
 
     const result = await login(formData.email, formData.password);
 
     if (result.success) {
       openMessage('success', 'Đăng nhập thành công!', null, message, messageApi, key);
-      const redirectTo = location.state?.from?.pathname || '/quiz-creator';
-      navigate(redirectTo, { replace: true });
+      // const redirectTo = location.state?.from?.pathname || '/quiz-creator';
+      // navigate(redirectTo, { replace: true });
     } else {
       openMessage('error', result.error, null, message, messageApi, key);
     }
