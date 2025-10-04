@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import { sendEmailResetPassword } from '../../firebase/auth';
 import {PATHS} from '../../data/routePaths'
 
 function ForgotPassWord() {

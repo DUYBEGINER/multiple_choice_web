@@ -16,14 +16,14 @@ function LoginPage(props) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { login, clearError } = useAuth();
+  const { login, clearError, loading } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   
-  const [loading, setLoading] = useState(false);
+  
   const [showPassword, setShowPassword] = useState(false);
 
   // Config Antd message
@@ -38,11 +38,12 @@ function LoginPage(props) {
   //     setFormData(prev => ({ ...prev, [name]: value }));
   //     // Clear global auth errors
   //   }, [clearError]);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    clearError();
-  };
+ const handleChange = useCallback((e) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({ ...prev, [name]: value }));
+      // Clear global auth errors
+      clearError();
+  }, [clearError]);
 
   // Define fields for the form
   const fields = [
@@ -57,11 +58,10 @@ function LoginPage(props) {
     e.preventDefault();
 
      if (!formData.email || !formData.password) {
-      message.warning('Please enter email and password');
+      openMessage('warning', 'Vui lòng nhập đủ Email và Mật khẩu', null, message, messageApi, key);
       return;
     }
 
-    setLoading(true);
     openMessage('loading', 'Đang xác thực...', null, message, messageApi, key);
 
     const result = await login(formData.email, formData.password);

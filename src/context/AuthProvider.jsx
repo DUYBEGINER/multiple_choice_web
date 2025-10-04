@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, use } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { checkSession } from "../api/authAPI";
 import { AuthContext } from "./AuthContext";
 import { loginWithEmailAndPassword, signupWithEmailAndPassword, logoutUser } from "../services/authService";
@@ -8,21 +8,20 @@ function AuthProvider({ children }) {
   const [state, setState] = useState({
     user: null,
     authenticate: false,
-    loading: true,
+    loading: false,
     error: null,
   });
 
   const isMountedRef = useRef(true);
   const isCheckingRef = useRef(false);
-  const sessionCheckIntervalRef = useRef(null);
+ 
+  console.log("isMounted: ", isMountedRef.current);
+  console.log("isChecking: ", isCheckingRef.current);
 
   // Cleanup function
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
-      if (sessionCheckIntervalRef.current) {
-        clearInterval(sessionCheckIntervalRef.current);
-      }
     };
   }, []);
 
@@ -38,13 +37,15 @@ function AuthProvider({ children }) {
   /**
    * Check session with retry logic
    */
-  const checkUserSession = useCallback(async (retryCount = 0) => {
+  const checkUserSession = useCallback(async () => {
+    console.log("[CHECK USER SESSION] isMounted: ", isMountedRef.current);
+    console.log("[CHECK USER SESSION] isChecking: ", isCheckingRef.current);
     if (isCheckingRef.current || !isMountedRef.current) {
+      console.log("err")
       return;
     }
-
+    console.log("Checking user session");
     isCheckingRef.current = true;
-    const MAX_RETRIES = 3;
 
     try {
       const response = await checkSession();
@@ -55,16 +56,17 @@ function AuthProvider({ children }) {
       if (response?.success && response?.data) {
         updateState({
           user: response.data,
-          isAuthenticated: true,
-          isLoading: false,
+          authenticate: true,
+          loading: false,
           error: null,
         });
         console.log("User session valid:", response.data);
       } else {
+        console.log("No valid user session");
         updateState({
           user: null,
-          isAuthenticated: false,
-          isLoading: false,
+          authenticate: false,
+          loading: false,
           error: null,
         });
       }
@@ -73,28 +75,16 @@ function AuthProvider({ children }) {
 
       if (!isMountedRef.current) return;
 
-      // Retry logic for network errors
-      if (
-        retryCount < MAX_RETRIES &&
-        (error.code === "NETWORK_ERROR" || !error.response)
-      ) {
-        const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
-        setTimeout(() => {
-          isCheckingRef.current = false;
-          checkUserSession(retryCount + 1);
-        }, delay);
-        return;
-      }
       updateState({
         user: null,
-        isAuthenticated: false,
-        isLoading: false,
+        authenticate: false,
+        loading: false,
         error: error.message,
       });
     } finally {
       isCheckingRef.current = false;
     }
-  }, []);
+  }, [updateState]);
 
   /**
    * Initial session check
@@ -104,41 +94,23 @@ function AuthProvider({ children }) {
   }, [checkUserSession]);
 
   /**
-   * Periodic session check
-   */
-  useEffect(() => {
-    if (state.isAuthenticated) {
-      sessionCheckIntervalRef.current = setInterval(() => {
-        checkSession();
-      }, 5 * 60 * 1000); // Every 5 minutes
-
-      return () => {
-        if (sessionCheckIntervalRef.current) {
-          clearInterval(sessionCheckIntervalRef.current);
-        }
-      };
-    }
-  }, [state.isAuthenticated, checkSession]);
-
-
-    /**
-   * Login
-   */
+  * Login
+  */
   const login = useCallback(async (email, password) => {
-    updateState({ isLoading: true, error: null });
+    updateState({ loading: true, error: null });
 
     try {
       const user = await loginWithEmailAndPassword(email, password);
       updateState({
         user,
-        isAuthenticated: true,
-        isLoading: false,
+        authenticate: true,
+        loading: false,
         error: null
       });
       return { success: true, user };
     } catch (error) {
       updateState({
-        isLoading: false,
+        loading: false,
         error: error.message
       });
       return { success: false, error: error.message };
@@ -149,22 +121,22 @@ function AuthProvider({ children }) {
    * Signup
    */
   const signup = useCallback(async (email, password, displayName) => {
-    updateState({ isLoading: true, error: null });
+    updateState({ loading: true, error: null });
 
     try {
       const user = await signupWithEmailAndPassword(email, password, displayName);
       
       updateState({
         user,
-        isAuthenticated: true,
-        isLoading: false,
+        authenticate: true,
+        loading: false,
         error: null
       });
 
       return { success: true, user };
     } catch (error) {
       updateState({
-        isLoading: false,
+        loading: false,
         error: error.message
       });
       return { success: false, error: error.message };
@@ -180,8 +152,8 @@ function AuthProvider({ children }) {
 
       updateState({
         user: null,
-        isAuthenticated: false,
-        isLoading: false,
+        authenticate: false,
+        loading: false,
         error: null
       });
 
@@ -190,8 +162,8 @@ function AuthProvider({ children }) {
       // Clear state even if logout fails
       updateState({
         user: null,
-        isAuthenticated: false,
-        isLoading: false,
+        authenticate: false,
+        loading: false,
         error: null
       });
       
@@ -210,14 +182,14 @@ function AuthProvider({ children }) {
    * Refresh session
    */
   const refreshSession = useCallback(() => {
-    updateState({ isLoading: true, error: null });
-    checkSession();
-  }, [updateState, checkSession]);
+    updateState({ loading: true, error: null });
+    checkUserSession();
+  }, [updateState, checkUserSession]);
 
   const contextValue = {
     user: state.user,
-    isAuthenticated: state.isAuthenticated,
-    isLoading: state.isLoading,
+    authenticate: state.authenticate,
+    loading: state.loading,
     error: state.error,
     login,
     signup,

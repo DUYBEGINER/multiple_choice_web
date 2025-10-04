@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
-import {confirmPasswordResetWithCode } from '../../firebase/auth';
 
 
 function SetNewPassword() {

@@ -16,7 +16,7 @@ const PrivateRoute = ({ children, redirectTo = PATHS.AUTH.LOGIN }) => {
       </div>
     );
   }
-  if (!user )
+  if (!user)
     return (
       <Navigate to={redirectTo} state={{ from: location }} replace />
     );

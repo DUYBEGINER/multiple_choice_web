@@ -12,7 +12,7 @@ import PrivateRoute from './components/ProtectedRoute/PrivateRoute';
 import AuthRoute from './components/ProtectedRoute/AuthRoute';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
 import { PATHS } from './data/routePaths';
-import useAuth from './hook/useAuth';
+
 
 function App() {
 
@@ -37,9 +37,9 @@ function App() {
           <Route path={PATHS.AUTH.ROOT} element={<AuthRoute><AuthLayout /></AuthRoute>}>
             <Route path={PATHS.AUTH_CHILD.LOGIN} element={<LoginPage/>} />
             <Route path={PATHS.AUTH_CHILD.SIGNUP} element={<SignUpPage />} />
-            <Route path={PATHS.AUTH_CHILD.FORGOTPASSWORD} element={<ForgotPassWord />} />
+            {/* <Route path={PATHS.AUTH_CHILD.FORGOTPASSWORD} element={<ForgotPassWord />} />
             <Route path={PATHS.AUTH_CHILD.RESET} element={<SetNewPassword />} />
-            <Route path={PATHS.AUTH_CHILD.EMAIL_CONFIRM} element={<EmailConfirmation />} />
+            <Route path={PATHS.AUTH_CHILD.EMAIL_CONFIRM} element={<EmailConfirmation />} /> */}
           </Route>
         </Routes>
   )
