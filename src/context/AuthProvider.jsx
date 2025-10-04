@@ -8,20 +8,27 @@ function AuthProvider({ children }) {
   const [state, setState] = useState({
     user: null,
     authenticate: false,
-    loading: false,
+    loading: true,
     error: null,
   });
 
   const isMountedRef = useRef(true);
   const isCheckingRef = useRef(false);
- 
+  const hasCheckedInitialSession = useRef(false); // Thêm flag để track initial check
+
+
   console.log("isMounted: ", isMountedRef.current);
   console.log("isChecking: ", isCheckingRef.current);
 
-  // Cleanup function
+  /**
+   * Cleanup function - RESET tất cả refs khi unmount
+   */
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
+      console.log("AuthProvider unmounting - resetting refs");
       isMountedRef.current = false;
+      isCheckingRef.current = false; // ✅ RESET để mount lần 2 hoạt động
     };
   }, []);
 
@@ -40,13 +47,14 @@ function AuthProvider({ children }) {
   const checkUserSession = useCallback(async () => {
     console.log("[CHECK USER SESSION] isMounted: ", isMountedRef.current);
     console.log("[CHECK USER SESSION] isChecking: ", isCheckingRef.current);
-    if (isCheckingRef.current || !isMountedRef.current) {
-      console.log("err")
+    if (!isMountedRef.current) {
+      console.log("Skipping session check - already checking or unmounted");
       return;
     }
+
     console.log("Checking user session");
     isCheckingRef.current = true;
-
+    updateState({ loading: true });
     try {
       const response = await checkSession();
       console.log("API Response:", response);
@@ -82,7 +90,10 @@ function AuthProvider({ children }) {
         error: error.message,
       });
     } finally {
-      isCheckingRef.current = false;
+        if (isMountedRef.current) {
+          isCheckingRef.current = false;
+          hasCheckedInitialSession.current = true;
+        }
     }
   }, [updateState]);
 
@@ -90,8 +101,19 @@ function AuthProvider({ children }) {
    * Initial session check
    */
   useEffect(() => {
-    checkUserSession();
-  }, [checkUserSession]);
+    if (!hasCheckedInitialSession.current) {
+      checkUserSession();
+    }
+  }, []); // Empty dependency array - chỉ chạy khi mount
+
+  /**
+   * Cleanup function
+   */
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   /**
   * Login
@@ -181,9 +203,9 @@ function AuthProvider({ children }) {
   /**
    * Refresh session
    */
-  const refreshSession = useCallback(() => {
+  const refreshSession = useCallback(async () => {
     updateState({ loading: true, error: null });
-    checkUserSession();
+    await checkUserSession();
   }, [updateState, checkUserSession]);
 
   const contextValue = {

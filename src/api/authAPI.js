@@ -11,9 +11,17 @@ const checkSession = async (component) => {
       console.log(`Response from checkSession: [${datenow}]`, res.data);
       return res.data; // Trả về dữ liệu user
     }
-    return null;
+     return { success: false, data: null };
   } catch (err) {
-    console.error("Error response", err.response);
+    console.error("Error checking session:", err.response?.status, err.response?.data);
+
+    // 401/403 là trường hợp bình thường (chưa login hoặc session hết hạn)
+    // KHÔNG throw error, return success: false
+    if (err.response?.status === 401 || err.response?.status === 403) {
+      return { success: false, data: null };
+    }
+
+    // Các lỗi khác (500, network error...) mới throw
     throw new Error(err.response?.data?.message || 'Error checking session');
   }
 }
