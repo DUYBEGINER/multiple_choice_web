@@ -25,7 +25,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <p className="text-gray-400 text-sm mb-6">
-          Bản Quyền © 2025 TIEMSACH.ORG. Tiệm sách eBook trực tuyến miễn phí dành cho mọi người!
+          Bản Quyền © 2025 QUIZ. Trang làm bài trắc nghiệm online!
         </p>
 
         {/* Contact Info */}

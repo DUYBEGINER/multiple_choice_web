@@ -1,46 +1,32 @@
 import { getAuth } from 'firebase-admin/auth';
-import { createAndSetSessionCookie } from "../services/createSessionCookie.js";
-import { getUserByUid, createUser } from "../repositories/userRepository.js";
+import { createAndSetSessionCookie } from "../utils/session.js";
+import { getUserById, createUser } from "../services/user.service.js";
+import { ApiResponse } from '../utils/response.js';
 
 
-
-// server/controllers/userController.js
+// Get current authenticated user
 const getCurrentUser = async (req, res) => {
-  console.log("Fetching current user...");
   try {
     const user = req.user;
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authenticated"
-      });
+      return ApiResponse.error(res, 'No user session found', 400);
     }
 
-    const userRecord = await getUserByUid(user.uid);
+    // Fetch user information from database
+    const userRecord = await getUserById(user.uid);
     if (!userRecord) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found"
-      });
+      return ApiResponse.error(res, 'User not found', 404);
     }
 
-    console.log("[auth controller] Current user auth:", userRecord);
-    return res.status(200).json({
-      success: true,
-      message: 'Login successful [getcurrentuser]',
-      data: userRecord,
-    });
+    return ApiResponse.success(res, userRecord);
 
   } catch (err) {
-    console.error("Error in /me:", err);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error"
-    });
+    return ApiResponse.error(res, "Internal server error", 500);
   }
 };
 
 
+// Handle authentication with session cookie
 const handleAuthWithSession = async (req, res) => {
   try {
     const user = req.user;
@@ -50,19 +36,18 @@ const handleAuthWithSession = async (req, res) => {
     console.log("Logging in user:", user);
 
     if (!user || !idToken) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid authentication data'
-      });
+      return ApiResponse.error(res, 'Invalid authentication data', 400);
     }
 
-    let userRecord = await getUserByUid(user.uid);
+    // Check if user exists in the database
+    let userRecord = await getUserById(user.uid);
 
     if (!userRecord) {
-      // Create new user if doesn't exist
+      // Create new user if doesn't exist (sign-up flow)
       userRecord = await createUser(user.uid, user.email, user.displayName);
     }
 
+    // Create session cookie
     const { sessionCookie, expiresIn } = await createAndSetSessionCookie(idToken);
 
     // Set secure cookie
@@ -74,101 +59,38 @@ const handleAuthWithSession = async (req, res) => {
       path: "/",
     });
 
-    return res.status(200).json({
-      success: true,
-      message: 'Login or Sign up successful',
-      data: userRecord,
-    });
+    return ApiResponse.success(res, userRecord, 'Authentication successful');
   } catch (error) {
-    console.error('Error logging in user:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Authentication failed'
-    });
+    return ApiResponse.error(res, "Authentication failed", 500);
   }
 }
 
 
+// Log out user
 const logOut = async (req, res) => {
   try {
     const user = req.user;
-    
+
+    // Ensure user is authenticated
     if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: 'No user session found'
-      });
+      return ApiResponse.error(res, 'No user session found', 400);
     }
 
-    console.log("Logging out user:", user);
+    // Revoke refresh tokens to log out user from all devices
     await getAuth().revokeRefreshTokens(user.uid);
-
+    
+    // Clear session cookie
     res.clearCookie('session', {
       httpOnly: true,
       sameSite: 'strict',
-      path: '/',   
+      path: '/',
     });
 
-    return res.status(200).json({ 
-      success: true,
-      message: 'Logout successful' 
-    });
+    return ApiResponse.success(res, null, 'Logout successful');
   } catch (err) {
     console.error("Error in /logout:", err);
-    return res.status(500).json({ 
-      success: false,
-      message: "Internal server error" 
-    });
+    return ApiResponse.error(res, "Internal server error", 500);
   }
 };
-
-// const signUp = async (req, res) => {
-//   try {
-//     const { uid, email } = req.user;
-//     const idToken = req.idToken;
-//     const { displayName } = req.body;  // frontend gửi displayName lên
-
-//     console.log("Token in signUp:", idToken);
-//     console.log("user sign up:", req.user)
-
-//      if (!uid || !email || !idToken) {
-//       return res.status(400).json({
-//         success: false,
-//         message: 'Missing required authentication data'
-//       });
-//     }
-
-//     const existingUser = await getUserByUid(uid);
-
-//     if (existingUser) {
-//       return res.status(409).json({ 
-//         success: false,
-//         message: 'User already exists'
-//       });
-//     }
-
-//     const newUser = await createUser(uid, email, displayName);
-
-//     const { sessionCookie, expiresIn } = await createAndSetSessionCookie(res, idToken);
-    
-//     // Set secure cookie
-//     res.cookie("session", sessionCookie, {
-//       maxAge: expiresIn,
-//       httpOnly: true,
-//       secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS trong production
-//       sameSite: "strict",
-//     });
-
-//     return res.status(201).json({
-//       success: true,
-//       message: "User created successfully",
-//       user: newUser,
-//     });
-//   } catch (error) {
-//     console.error("Error signing up user:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 
 export { handleAuthWithSession, getCurrentUser, logOut };

@@ -1,4 +1,3 @@
-// server/utils/session.js
 import { getAuth } from "firebase-admin/auth";
 
 /**

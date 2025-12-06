@@ -1,30 +1,22 @@
-import { getAuth } from 'firebase-admin/auth';
 import express from "express";
-//import function
 import {handleAuthWithSession, getCurrentUser, logOut} from '../controllers/authController.js'
 import { authMiddleware, checkSession  } from "../middleware/verifyToken.js";
+import { errorHandler } from "../middleware/errorHander.js";
 import { noCache } from '../middleware/noCache.js';
 
 const router = express.Router()
 
-// middleware that is specific to this router
-const timeLog = (req, res, next) => {
-    const now = new Date();
-    const hh = now.getHours().toString().padStart(2, "0");
-    const mm = now.getMinutes().toString().padStart(2, "0");
-    const ss = now.getSeconds().toString().padStart(2, "0");
+/**
+ * Auth Routes
+ * Base path: /api/auth
+ */
 
-    console.log(`[${hh}:${mm}:${ss}]`);
-    next();
-}
+// GET /api/auth/me
+router.get("/me", noCache, checkSession , getCurrentUser);
+// POST /api/auth/login
+router.post('/login', noCache, authMiddleware, handleAuthWithSession);
+// POST /api/auth/logout
+router.post('/logout', noCache, authMiddleware, logOut);
 
-
-router.use(timeLog)
-
-//Auth routes
-router.get("/me",noCache, checkSession , getCurrentUser);
-router.post('/login',noCache, authMiddleware, handleAuthWithSession);
-router.post('/logout',noCache, authMiddleware, logOut);
-// router.post('/signup', authMiddleware, signUp);
 
 export default router;

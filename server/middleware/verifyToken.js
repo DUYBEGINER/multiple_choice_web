@@ -42,7 +42,7 @@ const checkSession = async (req, res, next) => {
 
 }
 
-// const auth = getAuth(admin);
+
 const authMiddleware = async (req, res, next) => {
   try {
     // Kiểm tra Bearer token
@@ -70,8 +70,6 @@ const authMiddleware = async (req, res, next) => {
     }
 
     
-    
-
     req.user = decodedToken;
     req.idToken = idToken;
     console.log("[auth middleware] USE BEARER TOKEN:", req.user);

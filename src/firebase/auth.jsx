@@ -2,6 +2,8 @@ import {createUserWithEmailAndPassword, signInWithEmailAndPassword , signOut, up
 import { auth } from "./firebaseConfig";
 import { getAuth, verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
 import {} from "firebase/auth";
+
+
 //Get token login 
 export const getTokenSignInWithEmailAndPassword = async (email, password) => {
   try {
@@ -30,19 +32,6 @@ export const getTokenSignUpWithEmailAndPassword = async (email, password, displa
   }
 }
 
-// export const getIdTokenForLogout = async () => {
-//   const auth = getAuth();
-//   const user = auth.currentUser;
-//   if (!user) {
-//     // chờ init xong nếu F5 xong currentUser chưa sẵn sàng
-//     const { onAuthStateChanged } = "firebase/auth";
-//     await new Promise(resolve => {
-//       const unsub = onAuthStateChanged(auth, () => { unsub(); resolve(); });
-//     });
-//   }
-//   // true = force refresh (đảm bảo còn hạn)
-//   return await auth.currentUser.getIdToken(true);
-// }
 export const getIdTokenForLogout = async () => {
   try {
     const user = auth.currentUser;

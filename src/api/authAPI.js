@@ -1,8 +1,7 @@
-import axios from 'axios';
 import {axiosClient} from "../utils/axiosClient";
 
 
-const checkSession = async (component) => {
+const checkSession = async () => {
   try {
     // console.log("component call api:", component);
     const datenow = new Date().toLocaleString();
