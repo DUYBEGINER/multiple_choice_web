@@ -13,6 +13,7 @@ import AuthRoute from './components/ProtectedRoute/AuthRoute';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
 import { PATHS } from './data/routePaths';
 import useAuth from './hook/useAuth';
+import ViewListQuiz from './pages/quizCreator/ViewListQuiz';
 
 function App() {
 
@@ -26,6 +27,14 @@ function App() {
   return (
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route
+            path={PATHS.QUIZLIST}
+            element={
+              <PrivateRoute>
+                <ViewListQuiz />
+              </PrivateRoute>
+            }
+          />
           <Route
             path={PATHS.QUIZ}
             element={

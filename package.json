@@ -1,28 +1,22 @@
 {
-  "name": "my-project",
+  "name": "quiz-maker-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"cd server && nodemon server.js\"",
+    "dev": "concurrently \"vite\" \"npm run dev --prefix server\"",
+    "dev:client": "vite",
+    "dev:server": "npm run dev --prefix server",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "install:all": "npm install && npm install --prefix server"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "antd": "^5.27.1",
     "axios": "^1.11.0",
-    "concurrently": "^9.2.1",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
     "firebase": "^12.1.0",
-    "firebase-admin": "^13.5.0",
-    "morgan": "^1.10.1",
-    "mssql": "^11.0.1",
-    "nodemon": "^3.1.10",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.7.1"
@@ -33,6 +27,7 @@
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react-swc": "^3.10.2",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
     "eslint": "^9.30.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",

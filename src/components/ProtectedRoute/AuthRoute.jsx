@@ -5,7 +5,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import { PATHS } from "../../data/routePaths";
 
 // AuthRoute cho các route chỉ dành cho chưa login (như login/signup)
-const AuthRoute = memo(({ children , redirectTo = PATHS.QUIZ}) => {
+const AuthRoute = memo(({ children , redirectTo = PATHS.QUIZLIST}) => {
   const { user, loading, authenticate } = useAuth();
   if (loading)  return (
       <div className="min-h-screen flex items-center justify-center">

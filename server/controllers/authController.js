@@ -25,7 +25,6 @@ const getCurrentUser = async (req, res) => {
     }
 
     console.log("[auth controller] Current user auth:", userRecord);
-
     return res.status(200).json({
       success: true,
       message: 'Login successful [getcurrentuser]',

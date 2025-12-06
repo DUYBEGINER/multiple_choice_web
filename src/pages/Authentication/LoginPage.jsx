@@ -1,22 +1,20 @@
 import React, { useState, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
+import useAuth from "../../hook/useAuth";
 import NavBar from "../../components/NavBar";
+
 import { Link } from "react-router-dom";
 import { getTokenSignInWithEmailAndPassword } from '../../firebase/auth';
 import {authRequest} from '../../api/authAPI'
-// import { useNavigate, useLocation } from "react-router-dom";
-
-import useAuth from "../../hook/useAuth";
-
 import {PATHS} from '../../data/routePaths'
-
-import { message } from 'antd';
-import {openMessage} from '../../utils/messageUtils'
-
+import { useMessage } from "../../context/MessageProvider";
 
 function LoginPage(props) {
   // Define navigate
-  // const navigate = useNavigate();
-  // const location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const message = useMessage(); // Sử dụng global message
 
   const { setUser, clearError } = useAuth();
 
@@ -29,8 +27,8 @@ function LoginPage(props) {
   const [showPassword, setShowPassword] = useState(false);
 
   // Config Antd message
-  const [messageApi, contextHolder] = message.useMessage();
-  const key = "login-message"; // key để update cùng 1 message
+  // const [messageApi, contextHolder] = message.useMessage();
+  // const key = "login-message"; // key để update cùng 1 message
 
 
 
@@ -55,14 +53,13 @@ function LoginPage(props) {
     e.preventDefault();
     const { email, password } = formData;
 
-
     if (!email || !password) {
-      openMessage('warning', 'Vui lòng nhập đủ Email và Mật khẩu', null, message, messageApi, key);
+      message.warning('Vui lòng nhập đủ Email và Mật khẩu');
       return;
     }
 
     setLoading(true);
-    openMessage('loading', 'Đang xác thực...', null, message, messageApi, key);
+    const hideLoading = message.loading('Đang xác thực...', 0);
 
     try{
       // Get token from Firebase
@@ -70,14 +67,22 @@ function LoginPage(props) {
       // Authenticate with backend
       const response = await authRequest(token);
       console.log("User data from authRequest:", response);
-
+      // Hide loading message
+      hideLoading();
       if (!response?.success || !response?.data) {
         throw new Error('Không lấy được thông tin người dùng');
       }
+      message.success('Đăng nhập thành công', 2);
 
       setUser(response.data);
-      openMessage('success', 'Đăng nhập thành công!', null, message, messageApi, key);
+      // Show success message với thời gian dài hơn
       
+
+      // Navigate sau 1.5 giây
+      // setTimeout(() => {
+      //   const redirectTo = location.state?.from?.pathname || PATHS.QUIZ;
+      //   navigate(redirectTo, { replace: true });
+      // }, 1500);
       // Navigate to intended destination
       // const redirectTo = location.state?.from?.pathname || PATHS.QUIZ;
       // navigate(redirectTo, { replace: true });
@@ -88,6 +93,7 @@ function LoginPage(props) {
       console.error("Login error:", error);
       let errorMessage = 'Login failed. Please try again.';
       
+      hideLoading();
       // Handle specific error types
       if (error.code === 'auth/user-not-found') {
         errorMessage = 'No account found with this email address.';
@@ -99,7 +105,7 @@ function LoginPage(props) {
         errorMessage = 'Network error. Please check your connection.';
       }
       
-      openMessage('error', errorMessage, null, message, messageApi, key);
+      message.error(errorMessage);
     }finally{
       setLoading(false);
     }
@@ -111,7 +117,6 @@ function LoginPage(props) {
 
   return (
     <>
-      {contextHolder}
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="text-2xl text-center font-bold">
             Đăng nhập vào QuizMaker

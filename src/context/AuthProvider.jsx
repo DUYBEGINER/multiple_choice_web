@@ -5,7 +5,7 @@ import {AuthContext} from "./AuthContext";
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // null = chưa đăng nhập
   const [authenticate, setAuthenticate] = useState(false); // false = chưa xác thực
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // true = đang kiểm tra session ban đầu
   const [error, setError] = useState(null);
   const isMountedRef = useRef(true);
   const retryTimeoutRef = useRef(null);
@@ -13,26 +13,26 @@ function AuthProvider({ children }) {
   console.log("user", user);
 
    // Cleanup function
-  useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;  
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   isMountedRef.current = true;
+  //   return () => {
+  //     isMountedRef.current = false;  
+  //     if (retryTimeoutRef.current) {
+  //       clearTimeout(retryTimeoutRef.current);
+  //     }
+  //   };
+  // }, []);
 
   console.log("loading", loading);
 
-  const checkUserSession = useCallback(async (retryCount = 0) => {
+  const checkUserSession = useCallback(async () => {
     const MAX_RETRIES = 3;
 
     try{
       const response = await checkSession();
       console.log("API Response:", response);
 
-      if (!isMountedRef.current) return;
+      // if (!isMountedRef.current) return;
       
       if(response?.success && response?.data){
         setUser(response.data);
@@ -48,26 +48,16 @@ function AuthProvider({ children }) {
 
     } catch (error) {
       console.error("Error checking user session:", error);
-
-      if (!isMountedRef.current) return;
-      
-        // Retry logic for network errors
-        if (retryCount < MAX_RETRIES && error.code === 'NETWORK_ERROR') {
-          const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
-          retryTimeoutRef.current = setTimeout(() => {
-            checkUserSession(retryCount + 1);
-          }, retryDelay);
-          return;
-        } 
-        setAuthenticate(false);
-        setUser(null);
-        setError(error.message);
+      setAuthenticate(false);
+      setUser(null);
+      setError(error.message);
     } finally {
-      console.log("Finalizing session check", isMountedRef.current);
-      if (isMountedRef.current) {
-        console.log("Setting loading to false"); // Thêm log này
-        setLoading(false);
-      }
+      console.log("Finalizing session check");
+      setLoading(false);
+      // if (isMountedRef.current) {
+      //   console.log("Setting loading to false"); // Thêm log này
+      //   setLoading(false);
+      // }
     }
   }, []);
 

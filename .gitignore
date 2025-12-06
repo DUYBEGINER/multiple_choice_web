@@ -7,14 +7,20 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+server/node_modules
+
+# Build output
 dist
 dist-ssr
 *.local
 
+# Environment variables
 .env
 **/.env
 
+# Firebase service account
 **/service-account-file.json
 
 # Editor directories and files

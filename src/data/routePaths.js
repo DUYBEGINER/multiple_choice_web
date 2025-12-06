@@ -1,6 +1,7 @@
 // src/data/routePaths.ts
 export const PATHS = {
   HOME: "/",
+  QUIZLIST: "/quiz-list",
   QUIZ: "/quiz-creator",
   AUTH: {
     ROOT: "/auth",
@@ -17,4 +18,5 @@ export const PATHS = {
     RESET: "reset-password",
     EMAIL_CONFIRM: "email-confirmation",
   },
+
 }
