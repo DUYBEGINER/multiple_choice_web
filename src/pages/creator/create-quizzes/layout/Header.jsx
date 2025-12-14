@@ -1,9 +1,9 @@
 import React , {useCallback, useContext} from 'react';
 import {SettingOutlined} from "@ant-design/icons";
-import { logOutRequest } from '../../../api/authAPI';
-import { getIdTokenForLogout, logOut } from '../../../firebase/auth';
+import { logOutRequest } from '@/api/authAPI';
+import { getIdTokenForLogout, logOut } from '@/firebase/auth';
 // import { AuthContext } from '../../../context/AuthProvider';
-import useAuth from '../../../hook/useAuth'
+import useAuth from '@/hook/useAuth'
 
 function Header(props) {
 

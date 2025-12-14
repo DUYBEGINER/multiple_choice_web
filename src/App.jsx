@@ -2,7 +2,7 @@ import {React} from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import './App.css'
 import HomePage from './pages/HomePage';
-import CreateQuizPage from '@/pages/quizCreator/CreateQuizPage';
+import CreateQuizPage from '@/pages/creator/create-quizzes/CreateQuizPage';
 import LoginPage from '@/pages/Authentication/LoginPage';
 import SignUpPage from '@/pages/Authentication/SignUpPage';
 import SetNewPassword from '@/pages/Authentication/SetNewPassword';
@@ -12,9 +12,8 @@ import PrivateRoute from './components/ProtectedRoute/PrivateRoute';
 import AuthRoute from './components/ProtectedRoute/AuthRoute';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
 import { PATHS } from './data/routePaths';
-import useAuth from './hook/useAuth';
-import ViewListQuiz from './pages/quizCreator/ViewListQuiz';
-
+// import ViewListQuiz from './pages/quizCreator/ViewListQuiz';
+import MainLayout from './pages/creator/MainLayout';
 function App() {
 
   // const { loading } = useAuth();
@@ -31,7 +30,7 @@ function App() {
             path={PATHS.QUIZLIST}
             element={
               <PrivateRoute>
-                <ViewListQuiz />
+                <MainLayout />
               </PrivateRoute>
             }
           />
