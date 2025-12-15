@@ -54,7 +54,7 @@ function Sidebar() {
   return (
     <aside className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
       {/* Logo/Brand */}
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-6 py-4 ">
         <h1 className="text-xl font-bold text-indigo-600">QuizMaker</h1>
         <p className="text-xs text-gray-500 mt-1">Create & Manage Quizzes</p>
       </div>
@@ -87,7 +87,7 @@ function Sidebar() {
       {/* User Section */}
       <div className="border-t border-gray-200 p-4">
         {/* User Info */}
-        <div className="flex items-center gap-3 px-3 py-2 mb-2">
+        {/* <div className="flex items-center gap-3 px-3 py-2 mb-2">
           <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
             <UserOutlined className="text-indigo-600" />
           </div>
@@ -97,17 +97,17 @@ function Sidebar() {
             </p>
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
           </div>
-        </div>
+        </div> */}
 
         {/* Logout Button */}
-        <button
+        {/* <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                      text-red-600 hover:bg-red-50 transition-colors duration-200"
         >
           <LogoutOutlined className="text-lg" />
           <span>Logout</span>
-        </button>
+        </button> */}
       </div>
     </aside>
   );
