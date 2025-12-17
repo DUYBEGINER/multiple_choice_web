@@ -31,7 +31,7 @@ function Sidebar() {
       key: 'my-quizzes',
       label: 'My Quizzes',
       icon: <UnorderedListOutlined />,
-      path: '/my-quizzes',
+      path: '/quiz-list/1',
     },
     {
       key: 'settings',

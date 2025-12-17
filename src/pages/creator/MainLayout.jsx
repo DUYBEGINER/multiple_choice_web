@@ -13,7 +13,6 @@ function MainLayout() {
                 <HeaderCreator />
                 {/* Main Content Area */}
                 <main className="overflow-auto">
-
                     <Outlet />
                 </main>
             </div>

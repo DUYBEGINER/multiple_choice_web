@@ -11,6 +11,8 @@ import AuthLayout from './pages/Authentication/AuthLayout';
 import PrivateRoute from './components/ProtectedRoute/PrivateRoute';
 import AuthRoute from './components/ProtectedRoute/AuthRoute';
 import EmailConfirmation from './pages/Authentication/EmailConfirmation';
+import QuizList from './pages/creator/QuizList/QuizList';
+
 import { PATHS } from './data/routePaths';
 // import ViewListQuiz from './pages/quizCreator/ViewListQuiz';
 import MainLayout from './pages/creator/MainLayout';
@@ -33,7 +35,9 @@ function App() {
                 <MainLayout />
               </PrivateRoute>
             }
-          />
+          >
+            <Route path="/quiz-list/1" element={<QuizList />} />
+          </Route>
           <Route
             path={PATHS.QUIZ}
             element={
