@@ -18,6 +18,7 @@ function HomePage() {
                     <SectionHeader />
                     <div className="h-[500px]"></div>
                 </main>
+                <p>HAPPY NEW YEAR</p>
                 <Footer />
             </div>
     );
